@@ -1098,19 +1098,30 @@
     if (e.target.id === 'overlay') document.getElementById('overlay').classList.remove('show');
   });
 
-  function doPay() {
-    if (!tg) {
+  async function doPay() {
+    const userId = tg?.initDataUnsafe?.user?.id;
+    if (!userId) {
       alert('Откройте магазин через бота @S010lvloon_VPN_bot');
       return;
     }
     const btn = document.querySelector('.modal-pay-btn');
-    btn.textContent = 'Отправляем...';
+    btn.textContent = 'Создаём счёт...';
     btn.disabled = true;
     try {
-      tg.sendData(JSON.stringify({ action: 'purchase', plan: cur.planKey }));
-      document.getElementById('overlay').classList.remove('show');
+      const resp = await fetch('https://bot.s010lvloon.com/api/create-invoice', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ plan: cur.planKey, user_id: userId })
+      });
+      const data = await resp.json();
+      if (data.pay_url) {
+        tg.openLink(data.pay_url);
+        document.getElementById('overlay').classList.remove('show');
+      } else {
+        alert('Ошибка: ' + JSON.stringify(data));
+      }
     } catch(e) {
-      alert('Ошибка: ' + e.message);
+      alert('Ошибка соединения: ' + e.message);
     } finally {
       btn.textContent = '💎 Оплатить через CryptoBot';
       btn.disabled = false;
@@ -1133,7 +1144,8 @@
   function openTrialModal() {
     const used = localStorage.getItem(TRIAL_KEY);
     if (used) return;
-	  }
+    document.getElementById('trialOverlay').classList.add('show');
+  }
 
   document.getElementById('trialOverlay').addEventListener('click', e => {
     if (e.target.id === 'trialOverlay') document.getElementById('trialOverlay').classList.remove('show');
