@@ -1,1 +1,1201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>S010lvloon VPN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:     #0a0a0a;
+    --s1:     #111111;
+    --s2:     #1a1a1a;
+    --s3:     #222222;
+    --border: rgba(255,255,255,0.08);
+    --border2:rgba(255,255,255,0.14);
+    --white:  #ffffff;
+    --off:    #e8e8e8;
+    --muted:  #666666;
+    --dim:    #444444;
+    --accent: #ffffff;
+    --r:      14px;
+  }
 
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  body {
+    font-family: 'Space Grotesk', sans-serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* subtle scanlines */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.012) 2px,
+      rgba(255,255,255,0.012) 4px
+    );
+  }
+
+  .content { position: relative; z-index: 1; }
+
+  /* ── LOADER ── */
+  .loader {
+    position: fixed; inset: 0; background: #000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 24px; z-index: 999; transition: opacity 0.6s ease;
+  }
+  .loader.out { opacity: 0; pointer-events: none; }
+
+  .loader-logo-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+
+  .loader-svg { width: 56px; height: 56px; animation: logoSpin 0.8s ease both; }
+  @keyframes logoSpin { from{opacity:0;transform:scale(.6) rotate(-10deg)} to{opacity:1;transform:scale(1) rotate(0deg)} }
+
+  .loader-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px; font-weight: 700; letter-spacing: 2px;
+    color: var(--white); text-transform: uppercase;
+    animation: fadeIn .5s .3s both;
+  }
+
+  .loader-bar-wrap { width: 140px; }
+  .loader-bar { height: 1px; background: #222; position: relative; overflow: hidden; }
+  .loader-fill { height: 100%; background: #fff; animation: barFill 1s .2s ease both; }
+  @keyframes barFill { from{width:0} to{width:100%} }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ── HEADER ── */
+  .header {
+    padding: 20px 18px 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .logo { display: flex; align-items: center; gap: 12px; }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: #fff; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-icon svg { width: 24px; height: 24px; }
+
+  .logo-text-wrap { display: flex; flex-direction: column; }
+  .logo-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 700; letter-spacing: -.3px;
+    line-height: 1;
+  }
+  .logo-sub { font-size: 10px; color: var(--muted); letter-spacing: .5px; margin-top: 2px; }
+
+  .proto-pill {
+    display: flex; align-items: center; gap: 5px;
+    border: 1px solid var(--border2);
+    border-radius: 20px; padding: 4px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; font-weight: 600; color: var(--off);
+    letter-spacing: .5px;
+  }
+  .pulsedot {
+    width: 5px; height: 5px; border-radius: 50%; background: #fff;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+  /* ── HERO ── */
+  .hero { padding: 32px 18px 24px; }
+
+  .hero-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-kicker-line { width: 20px; height: 1px; background: var(--dim); }
+
+  .hero-title {
+    font-size: 36px; font-weight: 800; line-height: 1.05;
+    letter-spacing: -1.5px; margin-bottom: 16px;
+  }
+  .hero-title em { font-style: normal; color: var(--muted); }
+
+  .hero-desc { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 290px; margin-bottom: 24px; }
+
+  /* tech row */
+  .tech-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .tech-tag {
+    border: 1px solid var(--border2); border-radius: 6px;
+    padding: 6px 11px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600; color: var(--off);
+    letter-spacing: .3px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 0 18px; }
+
+  /* ── STATS ── */
+  .stats {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 1px; background: var(--border);
+    margin: 0 0 0;
+  }
+  .stat { background: var(--bg); padding: 18px 10px; text-align: center; }
+  .stat-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px; font-weight: 700; color: var(--white);
+  }
+  .stat-l { font-size: 10px; color: var(--muted); margin-top: 4px; letter-spacing: .5px; }
+
+  /* ── SECTION ── */
+  .sec {
+    padding: 28px 18px 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .sec-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted); white-space: nowrap;
+  }
+  .sec-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ── PLANS ── */
+  .plans { padding: 0 12px; display: flex; flex-direction: column; gap: 8px; }
+
+  .plan {
+    border: 1px solid var(--border);
+    border-radius: var(--r); padding: 20px;
+    cursor: pointer; position: relative; overflow: hidden;
+    transition: border-color .2s, background .2s;
+    background: var(--s1);
+  }
+  .plan:active { transform: scale(.985); }
+
+  .plan.featured {
+    border-color: var(--border2);
+    background: var(--s2);
+  }
+
+  /* white dot accent */
+  .plan.featured::after {
+    content: '';
+    position: absolute; top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(255,255,255,.06), transparent 70%);
+  }
+
+  .plan-row1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .plan-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; color: var(--muted); text-transform: uppercase;
+  }
+  .plan-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 9px;
+    border-radius: 4px; letter-spacing: .5px; text-transform: uppercase;
+  }
+  .badge-best  { background: var(--white); color: #000; }
+  .badge-save  { background: var(--s3); color: var(--muted); border: 1px solid var(--border2); }
+  .badge-trial { background: transparent; color: var(--white); border: 1px solid var(--white); font-size: 9px; letter-spacing: 1px; }
+
+  /* ── TRIAL BANNER ── */
+  .trial-banner {
+    margin: 0 12px 8px;
+    border: 1px solid var(--border2);
+    border-radius: var(--r);
+    padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+    background: var(--s1);
+    cursor: pointer; transition: background .2s;
+    position: relative; overflow: hidden;
+  }
+  .trial-banner:active { background: var(--s2); }
+  .trial-banner::before {
+    content: '';
+    position: absolute; top: 0; left: 0; bottom: 0; width: 2px;
+    background: var(--white);
+  }
+  .trial-icon { font-size: 26px; flex-shrink: 0; }
+  .trial-info { flex: 1; }
+  .trial-title { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .trial-desc  { font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .trial-arrow { font-size: 14px; color: var(--dim); flex-shrink: 0; }
+
+  /* used state */
+  .trial-banner.used { opacity: .45; pointer-events: none; }
+  .trial-banner.used .trial-title::after { content: ' · Использован'; color: var(--dim); font-size: 11px; }
+
+  /* ── TRIAL MODAL ── */
+  .trial-modal-icon { font-size: 40px; text-align: center; margin-bottom: 12px; }
+  .trial-timer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 32px; font-weight: 700; text-align: center;
+    letter-spacing: 2px; margin: 8px 0 4px;
+  }
+  .trial-timer-label { font-size: 11px; color: var(--muted); text-align: center; margin-bottom: 20px; font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+  .trial-limits { background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+  .trial-limit-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 13px; }
+  .trial-limit-row + .trial-limit-row { border-top: 1px solid var(--border); }
+  .tlr-key { color: var(--muted); }
+  .tlr-val { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--white); }
+  .trial-pay-btn {
+    width: 100%; padding: 14px;
+    background: transparent; border: 1px solid var(--border2); color: var(--white);
+    border-radius: 10px; font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: transform .15s; margin-top: 10px;
+  }
+  .trial-pay-btn:active { transform: scale(.97); }
+
+  .plan-price-row { display: flex; align-items: baseline; gap: 5px; margin-bottom: 2px; }
+  .plan-price {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 40px; font-weight: 700; line-height: 1; color: var(--white);
+  }
+  .plan-cur { font-size: 18px; color: var(--muted); }
+  .plan-note { font-size: 12px; color: var(--dim); margin-bottom: 16px; }
+
+  .plan-feats { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .plan-feat { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+  .feat-mark {
+    width: 16px; height: 16px; flex-shrink: 0;
+    border: 1px solid var(--border2); border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; color: var(--white);
+  }
+  .feat-mark.on { background: var(--white); color: #000; border-color: transparent; }
+
+  .plan-btn {
+    margin-top: 18px; width: 100%; padding: 13px;
+    border-radius: 8px; border: none; cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: .2px;
+    transition: transform .15s, opacity .15s;
+  }
+  .plan-btn:active { transform: scale(.97); opacity: .9; }
+  .btn-outline { background: transparent; border: 1px solid var(--border2); color: var(--white); }
+  .btn-fill   { background: var(--white); color: #000; }
+
+  /* ── SERVERS ── */
+  .servers { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 8px; }
+
+  .server-card {
+    background: var(--s1); border: 1px solid var(--border);
+    border-radius: var(--r); padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .server-flag { font-size: 24px; flex-shrink: 0; }
+  .server-info { flex: 1; }
+  .server-name { font-size: 14px; font-weight: 600; }
+  .server-loc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .server-ping {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; padding: 4px 10px; border-radius: 6px;
+    border: 1px solid var(--border2); color: var(--muted);
+  }
+  .server-ping.good { color: var(--white); border-color: rgba(255,255,255,.25); }
+
+  .server-note {
+    margin: 8px 12px 0;
+    font-size: 11px; color: var(--dim); line-height: 1.5;
+    padding: 10px 14px; border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── WHY VLESS ── */
+  .why-list { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 0; }
+
+  .why-item {
+    border: 1px solid var(--border); border-radius: 0;
+    padding: 16px 18px;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .why-item:first-child { border-radius: var(--r) var(--r) 0 0; }
+  .why-item:not(:first-child) { border-top: none; }
+  .why-item:last-child { border-radius: 0 0 var(--r) var(--r); }
+
+  .why-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; color: var(--dim);
+    flex-shrink: 0; padding-top: 2px; width: 20px;
+  }
+  .why-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .why-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── APPS ── */
+  .apps { padding: 0 12px 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .app-card {
+    background: var(--s1); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px;
+  }
+  .app-os {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 1.5px; color: var(--dim);
+    text-transform: uppercase; margin-bottom: 6px;
+  }
+  .app-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+  .app-where { font-size: 11px; color: var(--muted); }
+
+  /* ── HOW IT WORKS ── */
+  .steps { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 0; }
+  .step {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 16px 0; border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px; font-weight: 700; color: var(--s3);
+    flex-shrink: 0; width: 32px; line-height: 1;
+  }
+  .step-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .step-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── PAYMENT HIGHLIGHT ── */
+  .pay-highlight {
+    margin: 0 12px 4px;
+    border: 1px solid var(--border2); border-radius: var(--r); padding: 18px;
+    background: var(--s1);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .pay-crypto-icon { font-size: 32px; flex-shrink: 0; }
+  .pay-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .pay-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  /* ── FAQ ── */
+  .faq { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 0; }
+  .faq-item { border: 1px solid var(--border); border-top: none; }
+  .faq-item:first-child { border-top: 1px solid var(--border); border-radius: var(--r) var(--r) 0 0; }
+  .faq-item:last-child { border-radius: 0 0 var(--r) var(--r); }
+  .faq-q {
+    padding: 15px 16px; font-size: 13px; font-weight: 500;
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+  .faq-arr { color: var(--dim); font-size: 10px; transition: transform .2s; }
+  .faq-item.open .faq-arr { transform: rotate(180deg); }
+  .faq-a {
+    max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s;
+    font-size: 13px; color: var(--muted); line-height: 1.7; padding: 0 16px;
+    border-top: 0 solid var(--border);
+  }
+  .faq-item.open .faq-a { max-height: 200px; padding-bottom: 15px; border-top-width: 1px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 28px 18px 48px; border-top: 1px solid var(--border);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .footer-logo { display: flex; align-items: center; gap: 10px; }
+  .footer-logo svg { width: 22px; height: 22px; }
+  .footer-logo-name {
+    font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: 700;
+  }
+  .footer-copy { font-size: 11px; color: var(--dim); text-align: center; line-height: 1.7; }
+
+  /* ── MODAL ── */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,.88);
+    backdrop-filter: blur(12px); z-index: 100;
+    display: flex; align-items: flex-end;
+    opacity: 0; pointer-events: none; transition: opacity .25s;
+  }
+  .overlay.show { opacity: 1; pointer-events: all; }
+
+  .modal {
+    background: var(--s1); border: 1px solid var(--border2);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0; width: 100%; padding: 24px 18px 44px;
+    transform: translateY(100%);
+    transition: transform .32s cubic-bezier(.32,1.2,.56,1);
+  }
+  .overlay.show .modal { transform: translateY(0); }
+
+  .modal-handle { width: 32px; height: 3px; background: var(--s3); border-radius: 2px; margin: 0 auto 22px; }
+
+  .modal-title { font-size: 20px; font-weight: 800; letter-spacing: -.5px; margin-bottom: 4px; }
+  .modal-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+  .modal-plan-row {
+    background: var(--s2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 14px 16px; margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .mpr-name { font-size: 14px; font-weight: 700; }
+  .mpr-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .mpr-price {
+    font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 700;
+  }
+
+  .pay-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 2px; color: var(--muted);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+
+  .crypto-pay-box {
+    background: var(--s2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 16px;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .cpb-icon { font-size: 28px; flex-shrink: 0; }
+  .cpb-title { font-size: 14px; font-weight: 700; }
+  .cpb-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .cpb-arrow { margin-left: auto; font-size: 16px; color: var(--dim); }
+
+  .modal-pay-btn {
+    width: 100%; padding: 15px;
+    background: var(--white); color: #000; border: none;
+    border-radius: 10px; font-family: 'Space Grotesk', sans-serif;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+    transition: transform .15s, opacity .15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .modal-pay-btn:active { transform: scale(.97); opacity: .9; }
+
+  .modal-note {
+    text-align: center; font-size: 11px; color: var(--dim); margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: .3px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes up { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .u  { animation: up .45s ease both; }
+  .d1 { animation-delay: .05s; }
+  .d2 { animation-delay: .12s; }
+  .d3 { animation-delay: .2s; }
+
+  /* ── GUIDE SECTION ── */
+  .guide-tabs {
+    display: flex; gap: 0; margin: 0 12px 0;
+    border: 1px solid var(--border); border-radius: var(--r) var(--r) 0 0;
+    overflow: hidden; background: var(--s1);
+  }
+  .guide-tab {
+    flex: 1; padding: 11px 6px; text-align: center;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    font-family: 'JetBrains Mono', monospace; text-transform: uppercase;
+    color: var(--muted); cursor: pointer; transition: all .2s;
+    border-right: 1px solid var(--border); user-select: none;
+  }
+  .guide-tab:last-child { border-right: none; }
+  .guide-tab.active { background: var(--s3); color: var(--white); }
+  .guide-tab-icon { font-size: 14px; display: block; margin-bottom: 3px; }
+
+  .guide-panels { margin: 0 12px 28px; }
+  .guide-panel {
+    display: none;
+    background: var(--s1); border: 1px solid var(--border);
+    border-top: none; border-radius: 0 0 var(--r) var(--r);
+    padding: 20px;
+  }
+  .guide-panel.active { display: block; }
+
+  .guide-step {
+    display: flex; gap: 14px; padding: 12px 0;
+    border-bottom: 1px solid var(--border); align-items: flex-start;
+  }
+  .guide-step:last-child { border-bottom: none; padding-bottom: 0; }
+  .guide-step-n {
+    width: 24px; height: 24px; flex-shrink: 0;
+    border: 1px solid var(--border2); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; color: var(--white);
+  }
+  .guide-step-body { flex: 1; }
+  .guide-step-title { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .guide-step-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .guide-code {
+    margin-top: 8px; background: var(--s3);
+    border: 1px solid var(--border2); border-radius: 6px;
+    padding: 8px 12px; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--off); word-break: break-all; line-height: 1.5;
+  }
+  .guide-tip {
+    margin-top: 14px; padding: 10px 14px;
+    background: var(--s2); border: 1px solid var(--border2);
+    border-left: 2px solid var(--white); border-radius: 0 8px 8px 0;
+    font-size: 12px; color: var(--muted); line-height: 1.5;
+  }
+  .guide-dl-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 14px; padding: 12px 14px;
+    background: var(--s2); border: 1px solid var(--border2);
+    border-radius: 10px; text-decoration: none; cursor: pointer;
+    transition: background .2s;
+  }
+  .guide-dl-btn:hover { background: var(--s3); }
+  .guide-dl-name { font-size: 13px; font-weight: 600; color: var(--white); }
+  .guide-dl-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .guide-dl-arr  { font-size: 16px; color: var(--dim); }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo-wrap">
+    <svg class="loader-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,4 96,82 4,82" fill="white"/>
+      <polygon points="50,24 82,74 18,74" fill="#0a0a0a"/>
+      <polygon points="50,38 70,68 30,68" fill="white"/>
+      <polygon points="50,52 62,68 38,68" fill="#0a0a0a"/>
+      <polygon points="50,62 58,74 42,74" fill="white"/>
+    </svg>
+    <div class="loader-name">S010lvloon</div>
+  </div>
+  <div class="loader-bar-wrap">
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- HEADER -->
+  <div class="header u">
+    <div class="logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,4 96,82 4,82" fill="black"/>
+          <polygon points="50,24 82,74 18,74" fill="white"/>
+          <polygon points="50,38 70,68 30,68" fill="black"/>
+          <polygon points="50,52 62,68 38,68" fill="white"/>
+          <polygon points="50,62 58,74 42,74" fill="black"/>
+        </svg>
+      </div>
+      <div class="logo-text-wrap">
+        <div class="logo-name">S010lvloon</div>
+        <div class="logo-sub">VLESS · REALITY</div>
+      </div>
+    </div>
+    <div class="proto-pill">
+      <div class="pulsedot"></div>ONLINE
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero u d1">
+    <div class="hero-kicker">
+      <div class="hero-kicker-line"></div>
+      Протокол нового поколения
+    </div>
+    <h1 class="hero-title">
+      Невидимый<br>
+      для<br>
+      <em>провайдера</em>
+    </h1>
+    <p class="hero-desc">
+      VLESS + Reality маскируется под обычный HTTPS.
+      Никакого DPI, никаких блокировок — ваш трафик неотличим от браузера.
+    </p>
+    <div class="tech-row">
+      <div class="tech-tag">VLESS</div>
+      <div class="tech-tag">Reality TLS</div>
+      <div class="tech-tag">Zero Logs</div>
+      <div class="tech-tag">AES-256</div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="divider"></div>
+  <div class="stats u d2">
+    <div class="stat"><div class="stat-n">2</div><div class="stat-l">Сервера</div></div>
+    <div class="stat"><div class="stat-n">EU</div><div class="stat-l">Локация</div></div>
+    <div class="stat"><div class="stat-n">99.9%</div><div class="stat-l">Аптайм</div></div>
+    <div class="stat"><div class="stat-n">0</div><div class="stat-l">Логов</div></div>
+  </div>
+  <div class="divider"></div>
+
+  <!-- PLANS -->
+  <div class="sec"><div class="sec-title">Тарифы</div><div class="sec-line"></div></div>
+
+  <!-- TRIAL BANNER -->
+  <div class="trial-banner" id="trialBanner" onclick="openTrialModal()">
+    <div class="trial-icon">⚡</div>
+    <div class="trial-info">
+      <div class="trial-title">1 час бесплатно</div>
+      <div class="trial-desc">Попробуй VLESS+Reality без оплаты · 1 устройство · Только 1 раз</div>
+    </div>
+    <div class="trial-arrow">→</div>
+  </div>
+
+  <div class="plans u d3">
+
+    <div class="plan" onclick="openModal('1 месяц','199 ₽','month','1 месяц · VLESS+Reality')">
+      <div class="plan-row1">
+        <div class="plan-period">1 месяц</div>
+        <div class="plan-badge badge-save">Старт</div>
+      </div>
+      <div class="plan-price-row">
+        <span class="plan-price">199</span><span class="plan-cur">₽</span>
+      </div>
+      <div class="plan-note">в месяц</div>
+      <ul class="plan-feats">
+        <li class="plan-feat"><div class="feat-mark on">✓</div>3 устройства</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>2 сервера (NL + DE)</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>VLESS + Reality</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>Zero Logs</li>
+      </ul>
+      <button class="plan-btn btn-outline">Выбрать</button>
+    </div>
+
+    <div class="plan" onclick="openModal('3 месяца','449 ₽','three','3 месяца · VLESS+Reality')">
+      <div class="plan-row1">
+        <div class="plan-period">3 месяца</div>
+        <div class="plan-badge badge-save">−25%</div>
+      </div>
+      <div class="plan-price-row">
+        <span class="plan-price">449</span><span class="plan-cur">₽</span>
+      </div>
+      <div class="plan-note">≈ 150 ₽/мес · Экономия 25%</div>
+      <ul class="plan-feats">
+        <li class="plan-feat"><div class="feat-mark on">✓</div>5 устройств</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>2 сервера (NL + DE)</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>VLESS + Reality</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>Zero Logs · Приоритет</li>
+      </ul>
+      <button class="plan-btn btn-outline">Выбрать</button>
+    </div>
+
+    <div class="plan featured" onclick="openModal('12 месяцев','999 ₽','year','12 месяцев · VLESS+Reality')">
+      <div class="plan-row1">
+        <div class="plan-period">12 месяцев</div>
+        <div class="plan-badge badge-best">Лучший выбор</div>
+      </div>
+      <div class="plan-price-row">
+        <span class="plan-price">999</span><span class="plan-cur">₽</span>
+      </div>
+      <div class="plan-note">≈ 83 ₽/мес · Экономия 58%</div>
+      <ul class="plan-feats">
+        <li class="plan-feat"><div class="feat-mark on">✓</div>Безлимит устройств</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>2 сервера (NL + DE)</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>VLESS + Reality</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>Zero Logs · Приоритет</li>
+        <li class="plan-feat"><div class="feat-mark on">✓</div>Выделенный IP</li>
+      </ul>
+      <button class="plan-btn btn-fill">Купить выгодно →</button>
+    </div>
+
+  </div>
+
+  <!-- SERVERS -->
+  <div class="sec"><div class="sec-title">Серверы</div><div class="sec-line"></div></div>
+  <div class="servers">
+    <div class="server-card">
+      <div class="server-flag">🇳🇱</div>
+      <div class="server-info">
+        <div class="server-name">Нидерланды</div>
+        <div class="server-loc">Amsterdam · AMS-IX · 100 Гбит</div>
+      </div>
+      <div class="server-ping good">~18ms</div>
+    </div>
+    <div class="server-card">
+      <div class="server-flag">🇩🇪</div>
+      <div class="server-info">
+        <div class="server-name">Германия</div>
+        <div class="server-loc">Frankfurt · DE-CIX · 100 Гбит</div>
+      </div>
+      <div class="server-ping good">~22ms</div>
+    </div>
+    <div class="server-note">
+      // Один ключ — два сервера.<br>
+      Приложение автоматически выберет быстрейший.
+    </div>
+  </div>
+
+  <!-- WHY VLESS+REALITY -->
+  <div class="sec"><div class="sec-title">Почему VLESS+Reality</div><div class="sec-line"></div></div>
+  <div class="why-list">
+    <div class="why-item">
+      <div class="why-num">01</div>
+      <div>
+        <div class="why-title">Маскировка под HTTPS</div>
+        <div class="why-desc">Reality использует TLS-сертификаты реальных сайтов (Apple, Cloudflare). Провайдер и DPI видят обычный браузер.</div>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">02</div>
+      <div>
+        <div class="why-title">Обходит блокировки любого уровня</div>
+        <div class="why-desc">Работает там, где WireGuard и OpenVPN заблокированы. Проверено в России, Иране, Китае.</div>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">03</div>
+      <div>
+        <div class="why-title">До 1 Гбит/с без потерь</div>
+        <div class="why-desc">VLESS — самый лёгкий протокол. Нет лишних оберток — нет потерь скорости. 4K, игры, торренты — без ограничений.</div>
+      </div>
+    </div>
+    <div class="why-item">
+      <div class="why-num">04</div>
+      <div>
+        <div class="why-title">Zero Logs</div>
+        <div class="why-desc">Ни один байт вашего трафика не сохраняется. Мы физически не можем передать данные третьим лицам.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="sec"><div class="sec-title">Как это работает</div><div class="sec-line"></div></div>
+  <div class="steps" style="padding: 0 18px 4px;">
+    <div class="step">
+      <div class="step-n">01</div>
+      <div>
+        <div class="step-title">Выберите тариф и оплатите криптой</div>
+        <div class="step-desc">Оплата через CryptoBot — принимаем USDT, TON, BTC и другие. Анонимно и мгновенно.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">02</div>
+      <div>
+        <div class="step-title">Получите VLESS-ключ мгновенно</div>
+        <div class="step-desc">Бот автоматически создаёт ваш аккаунт в системе и присылает ключ — без ожидания.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">03</div>
+      <div>
+        <div class="step-title">Добавьте ключ в приложение</div>
+        <div class="step-desc">Один ключ работает сразу на двух серверах. Приложение само выберет быстрейший.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">04</div>
+      <div>
+        <div class="step-title">Пользуйтесь на всех устройствах</div>
+        <div class="step-desc">iOS, Android, Windows, macOS, Linux. Один ключ — на все ваши устройства одновременно.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT -->
+  <div class="sec"><div class="sec-title">Оплата</div><div class="sec-line"></div></div>
+  <div class="pay-highlight">
+    <div class="pay-crypto-icon">💎</div>
+    <div>
+      <div class="pay-title">CryptoBot</div>
+      <div class="pay-desc">USDT · TON · BTC · ETH · LTC<br>Мгновенно · Анонимно · Без комиссии</div>
+    </div>
+  </div>
+
+  <!-- APPS -->
+  <div class="sec"><div class="sec-title">Приложения</div><div class="sec-line"></div></div>
+  <div class="apps">
+    <div class="app-card">
+      <div class="app-os">Android</div>
+      <div class="app-name">v2rayNG</div>
+      <div class="app-where">Google Play</div>
+    </div>
+    <div class="app-card">
+      <div class="app-os">iOS</div>
+      <div class="app-name">Streisand</div>
+      <div class="app-where">App Store</div>
+    </div>
+    <div class="app-card">
+      <div class="app-os">Windows</div>
+      <div class="app-name">v2rayN</div>
+      <div class="app-where">GitHub</div>
+    </div>
+    <div class="app-card">
+      <div class="app-os">macOS</div>
+      <div class="app-name">V2Box</div>
+      <div class="app-where">App Store</div>
+    </div>
+    <div class="app-card">
+      <div class="app-os">Linux</div>
+      <div class="app-name">Nekoray</div>
+      <div class="app-where">GitHub</div>
+    </div>
+    <div class="app-card">
+      <div class="app-os">Router</div>
+      <div class="app-name">OpenWRT</div>
+      <div class="app-where">xray-core</div>
+    </div>
+  </div>
+
+
+  <!-- GUIDE -->
+  <div class="sec"><div class="sec-title">Инструкция подключения</div><div class="sec-line"></div></div>
+
+  <div class="guide-tabs">
+    <div class="guide-tab active" onclick="switchTab('android',this)">
+      <span class="guide-tab-icon">🤖</span>Android
+    </div>
+    <div class="guide-tab" onclick="switchTab('ios',this)">
+      <span class="guide-tab-icon">📱</span>iOS
+    </div>
+    <div class="guide-tab" onclick="switchTab('windows',this)">
+      <span class="guide-tab-icon">🪟</span>Windows
+    </div>
+    <div class="guide-tab" onclick="switchTab('mac',this)">
+      <span class="guide-tab-icon">🍎</span>macOS
+    </div>
+  </div>
+
+  <div class="guide-panels">
+
+    <!-- ANDROID -->
+    <div class="guide-panel active" id="guide-android">
+      <div class="guide-step">
+        <div class="guide-step-n">1</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Установите v2rayNG</div>
+          <div class="guide-step-desc">Откройте Google Play, найдите <b>v2rayNG</b> (разработчик 2dust). Установите бесплатно.</div>
+          <a class="guide-dl-btn" href="https://play.google.com/store/apps/details?id=com.v2ray.ang" target="_blank">
+            <div><div class="guide-dl-name">v2rayNG</div><div class="guide-dl-sub">Google Play · Бесплатно</div></div>
+            <div class="guide-dl-arr">↗</div>
+          </a>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">2</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Получите ваш ключ</div>
+          <div class="guide-step-desc">Откройте бота → нажмите <b>Мои ключи</b>. Скопируйте VLESS-ключ — он начинается с <b>vless://</b></div>
+          <div class="guide-code">vless://xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@...</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">3</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Добавьте ключ в приложение</div>
+          <div class="guide-step-desc">В v2rayNG нажмите <b>➕</b> в правом верхнем углу → <b>Импорт конфигурации из буфера обмена</b>. Ключ добавится автоматически.</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">4</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Подключитесь</div>
+          <div class="guide-step-desc">Нажмите на добавленный сервер, потом нажмите кнопку <b>▶</b> (треугольник) внизу экрана. Разрешите создание VPN-соединения.</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">5</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Выберите сервер</div>
+          <div class="guide-step-desc">В списке вы увидите 2 сервера — 🇳🇱 Нидерланды и 🇩🇪 Германия. Выберите тот, к которому ping ниже, или оставьте автовыбор.</div>
+        </div>
+      </div>
+      <div class="guide-tip">💡 Если не подключается — проверьте интернет и попробуйте второй сервер.</div>
+    </div>
+
+    <!-- IOS -->
+    <div class="guide-panel" id="guide-ios">
+      <div class="guide-step">
+        <div class="guide-step-n">1</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Установите Streisand</div>
+          <div class="guide-step-desc">Откройте App Store, найдите <b>Streisand</b>. Это лучшее приложение для VLESS на iOS, бесплатно.</div>
+          <a class="guide-dl-btn" href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">
+            <div><div class="guide-dl-name">Streisand</div><div class="guide-dl-sub">App Store · Бесплатно</div></div>
+            <div class="guide-dl-arr">↗</div>
+          </a>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">2</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Скопируйте ваш ключ</div>
+          <div class="guide-step-desc">В боте: <b>Мои ключи</b> → скопируйте ключ NL или DE (начинается с vless://). Можно добавить оба.</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">3</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Добавьте сервер</div>
+          <div class="guide-step-desc">В Streisand нажмите <b>➕</b> → <b>Add server from clipboard</b> (Добавить из буфера). Сервер появится в списке.</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">4</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Подключитесь</div>
+          <div class="guide-step-desc">Нажмите на сервер → <b>Connect</b>. Разрешите добавление VPN-конфигурации. Значок VPN появится в статусной строке.</div>
+        </div>
+      </div>
+      <div class="guide-tip">💡 Альтернатива: <b>Shadowrocket</b> (платное, $2.99) — чуть быстрее работает на слабом сигнале.</div>
+    </div>
+
+    <!-- WINDOWS -->
+    <div class="guide-panel" id="guide-windows">
+      <div class="guide-step">
+        <div class="guide-step-n">1</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Скачайте v2rayN</div>
+          <div class="guide-step-desc">Перейдите на GitHub и скачайте последний релиз — файл <b>v2rayN-windows-64.zip</b>.</div>
+          <a class="guide-dl-btn" href="https://github.com/2dust/v2rayN/releases/latest" target="_blank">
+            <div><div class="guide-dl-name">v2rayN</div><div class="guide-dl-sub">GitHub · Бесплатно · Windows 10/11</div></div>
+            <div class="guide-dl-arr">↗</div>
+          </a>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">2</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Распакуйте и запустите</div>
+          <div class="guide-step-desc">Распакуйте архив в любую папку. Запустите <b>v2rayN.exe</b>. Иконка появится в системном трее (рядом с часами).</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">3</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Добавьте ключ</div>
+          <div class="guide-step-desc">Скопируйте ваш ключ (vless://...). В v2rayN: <b>Серверы → Добавить сервер из буфера обмена</b>. Или нажмите <b>Ctrl+V</b> прямо в окне программы.</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">4</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Включите системный прокси</div>
+          <div class="guide-step-desc">Правой кнопкой по серверу → <b>Сделать активным</b>. Потом в нижней панели выберите <b>Системный прокси → Автоматическая настройка</b>. Теперь весь трафик идёт через VPN.</div>
+        </div>
+      </div>
+      <div class="guide-tip">💡 Для полного VPN-режима (как на телефоне) включите <b>TUN Mode</b> в настройках v2rayN. Потребуются права администратора.</div>
+    </div>
+
+    <!-- MACOS -->
+    <div class="guide-panel" id="guide-mac">
+      <div class="guide-step">
+        <div class="guide-step-n">1</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Установите V2Box</div>
+          <div class="guide-step-desc">Найдите <b>V2Box</b> в Mac App Store. Бесплатно, поддерживает VLESS+Reality, удобный интерфейс.</div>
+          <a class="guide-dl-btn" href="https://apps.apple.com/app/v2box-v2ray-client/id6446814690" target="_blank">
+            <div><div class="guide-dl-name">V2Box</div><div class="guide-dl-sub">Mac App Store · Бесплатно</div></div>
+            <div class="guide-dl-arr">↗</div>
+          </a>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">2</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Добавьте ключ</div>
+          <div class="guide-step-desc">Скопируйте ключ vless://... из бота. В V2Box нажмите <b>➕ → Paste from clipboard</b>.</div>
+        </div>
+      </div>
+      <div class="guide-step">
+        <div class="guide-step-n">3</div>
+        <div class="guide-step-body">
+          <div class="guide-step-title">Подключитесь</div>
+          <div class="guide-step-desc">Выберите добавленный сервер → <b>Connect</b>. Разрешите создание VPN в системных настройках macOS. Иконка щита появится в меню-баре.</div>
+        </div>
+      </div>
+      <div class="guide-tip">💡 Альтернатива для продвинутых: <b>Hiddify</b> — открытый, поддерживает TUN-режим и все протоколы.</div>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="sec"><div class="sec-title">FAQ</div><div class="sec-line"></div></div>
+  <div class="faq">
+    <div class="faq-item" onclick="faqT(this)">
+      <div class="faq-q">Ключ выдаётся сразу после оплаты? <span class="faq-arr">▼</span></div>
+      <div class="faq-a">Да — автоматически и мгновенно. После оплаты через CryptoBot бот создаёт ваш аккаунт в системе и присылает VLESS-ключ. Никакого ожидания.</div>
+    </div>
+    <div class="faq-item" onclick="faqT(this)">
+      <div class="faq-q">Как работает один ключ на двух серверах? <span class="faq-arr">▼</span></div>
+      <div class="faq-a">Ключ содержит настройки обоих серверов. В приложении вы добавляете один ключ — и видите оба сервера. Переключайтесь между ними в один клик или настройте автовыбор.</div>
+    </div>
+    <div class="faq-item" onclick="faqT(this)">
+      <div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div>
+      <div class="faq-a">WireGuard легко блокируется по сигнатуре. Reality маскируется под HTTPS — провайдер физически не может отличить ваш трафик от браузера без расшифровки.</div>
+    </div>
+    <div class="faq-item" onclick="faqT(this)">
+      <div class="faq-q">Какие крипты принимаете? <span class="faq-arr">▼</span></div>
+      <div class="faq-a">USDT (TRC20 / ERC20), TON, BTC, ETH, LTC, BNB и другие через CryptoBot. Оплата анонимная, мгновенная, без KYC.</div>
+    </div>
+    <div class="faq-item" onclick="faqT(this)">
+      <div class="faq-q">Есть возврат? <span class="faq-arr">▼</span></div>
+      <div class="faq-a">Да — 72 часа с момента оплаты, если VPN не работает на вашем устройстве. Обратитесь в поддержку.</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-logo">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,4 96,82 4,82" fill="white"/>
+        <polygon points="50,24 82,74 18,74" fill="#0a0a0a"/>
+        <polygon points="50,38 70,68 30,68" fill="white"/>
+        <polygon points="50,52 62,68 38,68" fill="#0a0a0a"/>
+        <polygon points="50,62 58,74 42,74" fill="white"/>
+      </svg>
+      <div class="footer-logo-name">S010lvloon VPN</div>
+    </div>
+    <div class="footer-copy">
+      VLESS + Reality · Zero Logs · 2 серверa EU<br>
+      Поддержка: @s010lvloon_support
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Оформление</div>
+    <div class="modal-sub">S010lvloon VPN · VLESS + Reality</div>
+
+    <div class="modal-plan-row">
+      <div>
+        <div class="mpr-name" id="m-name">—</div>
+        <div class="mpr-desc" id="m-desc">—</div>
+      </div>
+      <div class="mpr-price" id="m-price">—</div>
+    </div>
+
+    <div class="pay-section-label">Способ оплаты</div>
+    <div class="crypto-pay-box">
+      <div class="cpb-icon">💎</div>
+      <div>
+        <div class="cpb-title">CryptoBot</div>
+        <div class="cpb-desc">USDT · TON · BTC · ETH · LTC<br>Анонимно · Мгновенно</div>
+      </div>
+      <div class="cpb-arrow">→</div>
+    </div>
+
+    <button class="modal-pay-btn" onclick="doPay()">
+      <span>💎</span>
+      <span>Оплатить через CryptoBot</span>
+    </button>
+    <div class="modal-note">
+      // VLESS-ключ придёт автоматически · 2 сервера сразу
+    </div>
+  </div>
+</div>
+
+<script>
+  const tg = window.Telegram?.WebApp;
+  if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#0a0a0a'); tg.setHeaderColor('#0a0a0a'); }
+
+  setTimeout(() => document.getElementById('loader').classList.add('out'), 1100);
+
+  let cur = {};
+
+  function openModal(name, price, planKey, desc) {
+    cur = { name, price, planKey, desc };
+    document.getElementById('m-name').textContent = `Тариф «${name}»`;
+    document.getElementById('m-price').textContent = price;
+    document.getElementById('m-desc').textContent = desc;
+    document.getElementById('overlay').classList.add('show');
+  }
+
+  document.getElementById('overlay').addEventListener('click', e => {
+    if (e.target.id === 'overlay') document.getElementById('overlay').classList.remove('show');
+  });
+
+  function doPay() {
+    if (!tg) {
+      alert('Откройте магазин через бота @S010lvloon_VPN_bot');
+      return;
+    }
+    const btn = document.querySelector('.modal-pay-btn');
+    btn.textContent = 'Отправляем...';
+    btn.disabled = true;
+    try {
+      tg.sendData(JSON.stringify({ action: 'purchase', plan: cur.planKey }));
+      document.getElementById('overlay').classList.remove('show');
+    } catch(e) {
+      alert('Ошибка: ' + e.message);
+    } finally {
+      btn.textContent = '💎 Оплатить через CryptoBot';
+      btn.disabled = false;
+    }
+  }
+
+
+  // ── TRIAL ──────────────────────────────────────────────────────
+  const TRIAL_KEY = 's010_trial_used';
+
+  function initTrial() {
+    const used = localStorage.getItem(TRIAL_KEY);
+    if (used) {
+      const b = document.getElementById('trialBanner');
+      if (b) b.classList.add('used');
+    }
+  }
+  initTrial();
+
+  function openTrialModal() {
+    const used = localStorage.getItem(TRIAL_KEY);
+    if (used) return;
+	  }
+
+  document.getElementById('trialOverlay').addEventListener('click', e => {
+    if (e.target.id === 'trialOverlay') document.getElementById('trialOverlay').classList.remove('show');
+  });
+
+  function doTrial() {
+    if (tg) {
+      tg.sendData(JSON.stringify({ action: 'trial' }));
+      localStorage.setItem(TRIAL_KEY, '1');
+      document.getElementById('trialBanner').classList.add('used');
+      document.getElementById('trialOverlay').classList.remove('show');
+    } else {
+      alert('Пробный доступ: бот пришлёт VLESS-ключ на 1 час автоматически.');
+      localStorage.setItem(TRIAL_KEY, '1');
+      document.getElementById('trialBanner').classList.add('used');
+      document.getElementById('trialOverlay').classList.remove('show');
+    }
+  }
+
+
+  function switchTab(name, el) {
+    document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('guide-' + name).classList.add('active');
+  }
+
+  function faqT(el) {
+    const was = el.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!was) el.classList.add('open');
+  }
+</script>
+
+<!-- TRIAL MODAL -->
+<div class="overlay" id="trialOverlay">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="trial-modal-icon">⚡</div>
+    <div class="modal-title" style="text-align:center">1 час бесплатно</div>
+    <div class="modal-sub" style="text-align:center">Один раз на аккаунт · 1 устройство</div>
+
+    <div class="trial-limits">
+      <div class="trial-limit-row"><span class="tlr-key">Срок</span><span class="tlr-val">1 час</span></div>
+      <div class="trial-limit-row"><span class="tlr-key">Устройств</span><span class="tlr-val">1</span></div>
+      <div class="trial-limit-row"><span class="tlr-key">Серверов</span><span class="tlr-val">NL или DE</span></div>
+      <div class="trial-limit-row"><span class="tlr-key">Протокол</span><span class="tlr-val">VLESS+Reality</span></div>
+      <div class="trial-limit-row"><span class="tlr-key">Оплата</span><span class="tlr-val">не нужна</span></div>
+    </div>
+
+    <button class="modal-pay-btn" onclick="doTrial()" style="margin-bottom:10px">
+      <span>⚡</span>
+      <span>Получить пробный доступ</span>
+    </button>
+    <button class="trial-pay-btn" onclick="document.getElementById('trialOverlay').classList.remove('show')">
+      Посмотреть тарифы
+    </button>
+    <div class="modal-note" style="margin-top:12px">
+      // Ключ придёт в бот · Через 1 час доступ отключается автоматически
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
