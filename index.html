@@ -1039,7 +1039,13 @@
   async function doPay() {
     const userId = tg?.initDataUnsafe?.user?.id;
     if (!userId) {
-      alert('Откройте магазин через бота @S010lvloon_VPN_bot');
+      // Попробуем через sendData вместо API
+      if (tg) {
+        tg.sendData(JSON.stringify({ action: 'purchase', plan: cur.planKey }));
+        document.getElementById('overlay').classList.remove('show');
+      } else {
+        alert('Откройте магазин через бота @S010lvloon_VPN_bot');
+      }
       return;
     }
     const btn = document.querySelector('.modal-pay-btn');
