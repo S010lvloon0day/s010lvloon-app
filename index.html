@@ -903,16 +903,14 @@
     btn.innerHTML = '<span>⏳</span><span>Создаём счёт...</span>';
     btn.disabled = true;
     try {
-      const userId = tg?.initDataUnsafe?.user?.id || null;
-      const initData = tg?.initData || null;
-      if (!userId && !initData) {
-        tg?.showAlert('Откройте магазин через бота @S010lvloon_VPN_bot');
-        return;
-      }
       const resp = await fetch('https://bot.s010lvloon.com/api/create-invoice', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ plan: cur.planKey, user_id: userId, init_data: initData })
+        body: JSON.stringify({ 
+          plan: cur.planKey, 
+          user_id: tg?.initDataUnsafe?.user?.id || null,
+          init_data: tg?.initData || null
+        })
       });
       const data = await resp.json();
       if (data.pay_url) {
