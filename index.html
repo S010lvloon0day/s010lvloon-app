@@ -903,22 +903,23 @@
     btn.innerHTML = '<span>⏳</span><span>Создаём счёт...</span>';
     btn.disabled = true;
     try {
-      const userId = getUserId();
-      if (!userId) {
-        tg?.showAlert('Пожалуйста, откройте магазин через кнопку 🛒 Купить VPN в боте @S010lvloon_VPN_bot');
+      const userId = tg?.initDataUnsafe?.user?.id || null;
+      const initData = tg?.initData || null;
+      if (!userId && !initData) {
+        tg?.showAlert('Откройте магазин через бота @S010lvloon_VPN_bot');
         return;
       }
       const resp = await fetch('https://bot.s010lvloon.com/api/create-invoice', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ plan: cur.planKey, user_id: userId })
+        body: JSON.stringify({ plan: cur.planKey, user_id: userId, init_data: initData })
       });
       const data = await resp.json();
       if (data.pay_url) {
         tg.openTelegramLink(data.pay_url);
         document.getElementById('overlay').classList.remove('show');
       } else {
-        tg?.showAlert('Ошибка создания счёта. Попробуйте ещё раз.');
+        tg?.showAlert('Ошибка: ' + JSON.stringify(data));
       }
     } catch(e) {
       tg?.showAlert('Ошибка: ' + e.message);
