@@ -855,6 +855,17 @@
 
 <script>
   const tg = window.Telegram?.WebApp;
+  function getUserId() {
+    // Пробуем initDataUnsafe
+    const id = tg?.initDataUnsafe?.user?.id;
+    if (id) return id;
+    // Парсим initData вручную
+    try {
+        const params = new URLSearchParams(tg?.initData || '');
+        const user = JSON.parse(decodeURIComponent(params.get('user') || '{}'));
+        return user.id || null;
+    } catch(e) { return null; }
+  }
   if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#0a0a0a'); tg.setHeaderColor('#0a0a0a'); }
 
   setTimeout(() => document.getElementById('loader').classList.add('out'), 1100);
@@ -892,7 +903,7 @@
     btn.innerHTML = '<span>⏳</span><span>Создаём счёт...</span>';
     btn.disabled = true;
     try {
-      const userId = tg?.initDataUnsafe?.user?.id;
+      const userId = getUserId();
       if (!userId) {
         tg?.showAlert('Пожалуйста, откройте магазин через кнопку 🛒 Купить VPN в боте @S010lvloon_VPN_bot');
         return;
@@ -940,7 +951,7 @@
   });
 
   async function doTrial() {
-    const userId = tg?.initDataUnsafe?.user?.id;
+    const userId = getUserId();
     if (!tg) {
       alert('Откройте магазин через бота @S010lvloon_VPN_bot');
       return;
