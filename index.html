@@ -856,15 +856,14 @@
 <script>
   const tg = window.Telegram?.WebApp;
   function getUserId() {
-    // Пробуем initDataUnsafe
+    // Из initDataUnsafe
     const id = tg?.initDataUnsafe?.user?.id;
     if (id) return id;
-    // Парсим initData вручную
-    try {
-        const params = new URLSearchParams(tg?.initData || '');
-        const user = JSON.parse(decodeURIComponent(params.get('user') || '{}'));
-        return user.id || null;
-    } catch(e) { return null; }
+    // Из URL hash (#uid=123456)
+    const hash = window.location.hash;
+    const match = hash.match(/uid=(\d+)/);
+    if (match) return parseInt(match[1]);
+    return null;
   }
   if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#0a0a0a'); tg.setHeaderColor('#0a0a0a'); }
 
@@ -908,7 +907,7 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ 
           plan: cur.planKey, 
-          user_id: tg?.initDataUnsafe?.user?.id || null,
+          user_id: getUserId(),
           init_data: tg?.initData || null
         })
       });
