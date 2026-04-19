@@ -1042,12 +1042,11 @@
     btn.disabled = true;
     try {
       const userId = tg.initDataUnsafe?.user?.id;
-      console.log('user:', tg.initDataUnsafe?.user, 'initData:', tg.initData?.substring(0, 50));
       if (!userId) {
-          alert('user_id не получен. initData: ' + (tg.initData ? 'есть' : 'нет'));
-          btn.textContent = '💎 Оплатить через CryptoBot';
-          btn.disabled = false;
-          return;
+        btn.textContent = '💎 Оплатить через CryptoBot';
+        btn.disabled = false;
+        tg.showAlert('Пожалуйста откройте магазин через кнопку 🛒 в боте @S010lvloon_VPN_bot');
+        return;
       }
       const resp = await fetch('https://bot.s010lvloon.com/api/create-invoice', {
         method: 'POST',
@@ -1059,10 +1058,10 @@
         tg.openTelegramLink(data.pay_url);
         document.getElementById('overlay').classList.remove('show');
       } else {
-        alert('Ошибка создания счёта');
+        tg.showAlert('Ошибка создания счёта');
       }
     } catch(e) {
-      alert('Ошибка: ' + e.message);
+      tg.showAlert('Ошибка: ' + e.message);
     } finally {
       btn.textContent = '💎 Оплатить через CryptoBot';
       btn.disabled = false;
