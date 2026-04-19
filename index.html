@@ -856,15 +856,14 @@
 <script>
   const tg = window.Telegram?.WebApp;
   function getUserId() {
-    // Из initDataUnsafe
     const id = tg?.initDataUnsafe?.user?.id;
     if (id) return id;
-    // Из URL hash (#uid=123456)
-    const hash = window.location.hash;
-    const match = hash.match(/uid=(\d+)/);
-    if (match) return parseInt(match[1]);
+    // Из query параметра ?uid=123456
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid');
+    if (uid) return parseInt(uid);
     return null;
-  }
+}
   if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#0a0a0a'); tg.setHeaderColor('#0a0a0a'); }
 
   setTimeout(() => document.getElementById('loader').classList.add('out'), 1100);
