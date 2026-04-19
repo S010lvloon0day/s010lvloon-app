@@ -1042,6 +1042,12 @@
     btn.disabled = true;
     try {
       const userId = tg.initDataUnsafe?.user?.id;
+      if (!userId) {
+          alert('Откройте магазин через бота — нажмите кнопку 🛒 Купить VPN');
+          btn.textContent = '💎 Оплатить через CryptoBot';
+          btn.disabled = false;
+          return;
+      }
       const resp = await fetch('https://bot.s010lvloon.com/api/create-invoice', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
