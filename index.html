@@ -870,12 +870,6 @@
     return null;
   }
   if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#0a0a0a'); tg.setHeaderColor('#0a0a0a'); }
-  // Временный debug - удалить потом
-  setTimeout(() => {
-      const uid = new URLSearchParams(window.location.search).get('uid');
-      const tgId = tg?.initDataUnsafe?.user?.id;
-      tg?.showAlert(`URL uid: ${uid}\nTG id: ${tgId}\nURL: ${window.location.href.substring(0, 80)}`);
-  }, 2000);
   setTimeout(() => document.getElementById('loader').classList.add('out'), 1100);
 
   let cur = {};
@@ -907,6 +901,11 @@
   });
 
   async function doPay() {
+    const userId = getUserId();
+    if (!userId) {
+      tg?.showAlert('Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot');
+      return;
+    }
     const btn = document.getElementById('payBtn');
     btn.innerHTML = '<span>⏳</span><span>Создаём счёт...</span>';
     btn.disabled = true;
@@ -916,10 +915,11 @@
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ 
           plan: cur.planKey, 
-          user_id: getUserId(),
+          user_id: userId,
           init_data: tg?.initData || null
         })
       });
+      // ... остальной код без изменений
       const data = await resp.json();
       if (data.pay_url) {
         tg.openTelegramLink(data.pay_url);
