@@ -560,7 +560,6 @@
   </div>
 
   <div class="plans u d3">
-
     <div class="plan" id="plan-month" onclick="openModal('1 месяц', (plans.month ? plans.month.price_usd + ' USDT' : '2.20 USDT'), 'month', '1 месяц · VLESS+Reality')">
       <div class="plan-row1">
         <div class="plan-period">1 месяц</div>
@@ -615,7 +614,6 @@
       </ul>
       <button class="plan-btn btn-fill">Купить выгодно →</button>
     </div>
-
   </div>
 
   <!-- SERVERS -->
@@ -643,14 +641,14 @@
     </div>
   </div>
 
-  <!-- WHY VLESS+REALITY -->
+  <!-- WHY -->
   <div class="sec"><div class="sec-title">Почему VLESS+Reality</div><div class="sec-line"></div></div>
   <div class="why-list">
     <div class="why-item">
       <div class="why-num">01</div>
       <div>
         <div class="why-title">Маскировка под HTTPS</div>
-        <div class="why-desc">Reality использует TLS-сертификаты реальных сайтов (Apple, Cloudflare). Провайдер и DPI видят обычный браузер.</div>
+        <div class="why-desc">Reality использует TLS-сертификаты реальных сайтов. Провайдер и DPI видят обычный браузер.</div>
       </div>
     </div>
     <div class="why-item">
@@ -664,7 +662,7 @@
       <div class="why-num">03</div>
       <div>
         <div class="why-title">До 1 Гбит/с без потерь</div>
-        <div class="why-desc">VLESS — самый лёгкий протокол. Нет лишних оберток — нет потерь скорости. 4K, игры, торренты — без ограничений.</div>
+        <div class="why-desc">VLESS — самый лёгкий протокол. Нет лишних оберток — нет потерь скорости.</div>
       </div>
     </div>
     <div class="why-item">
@@ -690,21 +688,21 @@
       <div class="step-n">02</div>
       <div>
         <div class="step-title">Получите VLESS-ключ мгновенно</div>
-        <div class="step-desc">Бот автоматически создаёт ваш аккаунт в системе и присылает ключ — без ожидания.</div>
+        <div class="step-desc">Бот автоматически создаёт ваш аккаунт и присылает ключ — без ожидания.</div>
       </div>
     </div>
     <div class="step">
       <div class="step-n">03</div>
       <div>
         <div class="step-title">Добавьте ключ в приложение</div>
-        <div class="step-desc">Один ключ работает сразу на двух серверах. Приложение само выберет быстрейший.</div>
+        <div class="step-desc">Один ключ работает сразу на двух серверах.</div>
       </div>
     </div>
     <div class="step">
       <div class="step-n">04</div>
       <div>
         <div class="step-title">Пользуйтесь на всех устройствах</div>
-        <div class="step-desc">iOS, Android, Windows, macOS, Linux. Один ключ — на все ваши устройства одновременно.</div>
+        <div class="step-desc">iOS, Android, Windows, macOS, Linux. Один ключ — на все ваши устройства.</div>
       </div>
     </div>
   </div>
@@ -722,204 +720,58 @@
   <!-- APPS -->
   <div class="sec"><div class="sec-title">Приложения</div><div class="sec-line"></div></div>
   <div class="apps">
-    <div class="app-card">
-      <div class="app-os">Android</div>
-      <div class="app-name">v2rayNG</div>
-      <div class="app-where">Google Play</div>
-    </div>
-    <div class="app-card">
-      <div class="app-os">iOS</div>
-      <div class="app-name">Streisand</div>
-      <div class="app-where">App Store</div>
-    </div>
-    <div class="app-card">
-      <div class="app-os">Windows</div>
-      <div class="app-name">v2rayN</div>
-      <div class="app-where">GitHub</div>
-    </div>
-    <div class="app-card">
-      <div class="app-os">macOS</div>
-      <div class="app-name">V2Box</div>
-      <div class="app-where">App Store</div>
-    </div>
-    <div class="app-card">
-      <div class="app-os">Linux</div>
-      <div class="app-name">Nekoray</div>
-      <div class="app-where">GitHub</div>
-    </div>
-    <div class="app-card">
-      <div class="app-os">Router</div>
-      <div class="app-name">OpenWRT</div>
-      <div class="app-where">xray-core</div>
-    </div>
+    <div class="app-card"><div class="app-os">Android</div><div class="app-name">v2rayNG</div><div class="app-where">Google Play</div></div>
+    <div class="app-card"><div class="app-os">iOS</div><div class="app-name">Streisand</div><div class="app-where">App Store</div></div>
+    <div class="app-card"><div class="app-os">Windows</div><div class="app-name">v2rayN</div><div class="app-where">GitHub</div></div>
+    <div class="app-card"><div class="app-os">macOS</div><div class="app-name">V2Box</div><div class="app-where">App Store</div></div>
+    <div class="app-card"><div class="app-os">Linux</div><div class="app-name">Nekoray</div><div class="app-where">GitHub</div></div>
+    <div class="app-card"><div class="app-os">Router</div><div class="app-name">OpenWRT</div><div class="app-where">xray-core</div></div>
   </div>
 
   <!-- GUIDE -->
   <div class="sec"><div class="sec-title">Инструкция подключения</div><div class="sec-line"></div></div>
   <div class="guide-tabs">
-    <div class="guide-tab active" onclick="switchTab('android',this)">
-      <span class="guide-tab-icon">🤖</span>Android
-    </div>
-    <div class="guide-tab" onclick="switchTab('ios',this)">
-      <span class="guide-tab-icon">📱</span>iOS
-    </div>
-    <div class="guide-tab" onclick="switchTab('windows',this)">
-      <span class="guide-tab-icon">🪟</span>Windows
-    </div>
-    <div class="guide-tab" onclick="switchTab('mac',this)">
-      <span class="guide-tab-icon">🍎</span>macOS
-    </div>
+    <div class="guide-tab active" onclick="switchTab('android',this)"><span class="guide-tab-icon">🤖</span>Android</div>
+    <div class="guide-tab" onclick="switchTab('ios',this)"><span class="guide-tab-icon">📱</span>iOS</div>
+    <div class="guide-tab" onclick="switchTab('windows',this)"><span class="guide-tab-icon">🪟</span>Windows</div>
+    <div class="guide-tab" onclick="switchTab('mac',this)"><span class="guide-tab-icon">🍎</span>macOS</div>
   </div>
-
   <div class="guide-panels">
     <div class="guide-panel active" id="guide-android">
-      <div class="guide-step">
-        <div class="guide-step-n">1</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Установите v2rayNG</div>
-          <div class="guide-step-desc">Откройте Google Play, найдите <b>v2rayNG</b> (разработчик 2dust). Установите бесплатно.</div>
-          <a class="guide-dl-btn" href="https://play.google.com/store/apps/details?id=com.v2ray.ang" target="_blank">
-            <div><div class="guide-dl-name">v2rayNG</div><div class="guide-dl-sub">Google Play · Бесплатно</div></div>
-            <div class="guide-dl-arr">↗</div>
-          </a>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">2</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Получите ваш ключ</div>
-          <div class="guide-step-desc">Откройте бота → нажмите <b>Мои ключи</b>. Скопируйте VLESS-ключ.</div>
-          <div class="guide-code">vless://xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx@...</div>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">3</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Добавьте ключ</div>
-          <div class="guide-step-desc">В v2rayNG нажмите <b>➕</b> → <b>Импорт конфигурации из буфера обмена</b>.</div>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">4</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Подключитесь</div>
-          <div class="guide-step-desc">Нажмите кнопку <b>▶</b> внизу экрана. Разрешите создание VPN-соединения.</div>
-        </div>
-      </div>
-      <div class="guide-tip">💡 Если не подключается — попробуйте второй сервер.</div>
+      <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Установите v2rayNG</div><div class="guide-step-desc">Google Play → v2rayNG (разработчик 2dust).</div><a class="guide-dl-btn" href="https://play.google.com/store/apps/details?id=com.v2ray.ang" target="_blank"><div><div class="guide-dl-name">v2rayNG</div><div class="guide-dl-sub">Google Play · Бесплатно</div></div><div class="guide-dl-arr">↗</div></a></div></div>
+      <div class="guide-step"><div class="guide-step-n">2</div><div class="guide-step-body"><div class="guide-step-title">Получите ваш ключ</div><div class="guide-step-desc">В боте → Мои ключи → скопируйте ссылку подписки.</div></div></div>
+      <div class="guide-step"><div class="guide-step-n">3</div><div class="guide-step-body"><div class="guide-step-title">Добавьте подписку</div><div class="guide-step-desc">В v2rayNG → Подписки → Добавить → вставьте ссылку подписки.</div></div></div>
+      <div class="guide-step"><div class="guide-step-n">4</div><div class="guide-step-body"><div class="guide-step-title">Подключитесь</div><div class="guide-step-desc">Выберите сервер → нажмите кнопку ▶.</div></div></div>
+      <div class="guide-tip">💡 Если не подключается — попробуйте второй сервер или Антизаглушку.</div>
     </div>
-
     <div class="guide-panel" id="guide-ios">
-      <div class="guide-step">
-        <div class="guide-step-n">1</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Установите Streisand</div>
-          <div class="guide-step-desc">Откройте App Store, найдите <b>Streisand</b>. Бесплатно.</div>
-          <a class="guide-dl-btn" href="https://apps.apple.com/app/streisand/id6450534064" target="_blank">
-            <div><div class="guide-dl-name">Streisand</div><div class="guide-dl-sub">App Store · Бесплатно</div></div>
-            <div class="guide-dl-arr">↗</div>
-          </a>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">2</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Добавьте сервер</div>
-          <div class="guide-step-desc">В Streisand нажмите <b>➕</b> → <b>Add server from clipboard</b>.</div>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">3</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Подключитесь</div>
-          <div class="guide-step-desc">Нажмите на сервер → <b>Connect</b>. Разрешите VPN.</div>
-        </div>
-      </div>
-      <div class="guide-tip">💡 Альтернатива: <b>Shadowrocket</b> ($2.99) — чуть быстрее на слабом сигнале.</div>
+      <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Установите Streisand</div><div class="guide-step-desc">App Store → Streisand. Бесплатно.</div><a class="guide-dl-btn" href="https://apps.apple.com/app/streisand/id6450534064" target="_blank"><div><div class="guide-dl-name">Streisand</div><div class="guide-dl-sub">App Store · Бесплатно</div></div><div class="guide-dl-arr">↗</div></a></div></div>
+      <div class="guide-step"><div class="guide-step-n">2</div><div class="guide-step-body"><div class="guide-step-title">Добавьте подписку</div><div class="guide-step-desc">➕ → Add from URL → вставьте ссылку подписки из бота.</div></div></div>
+      <div class="guide-step"><div class="guide-step-n">3</div><div class="guide-step-body"><div class="guide-step-title">Подключитесь</div><div class="guide-step-desc">Выберите сервер → Connect.</div></div></div>
+      <div class="guide-tip">💡 KillSwitch: Settings → Kill Switch → включить.</div>
     </div>
-
     <div class="guide-panel" id="guide-windows">
-      <div class="guide-step">
-        <div class="guide-step-n">1</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Скачайте v2rayN</div>
-          <div class="guide-step-desc">Скачайте последний релиз — файл <b>v2rayN-windows-64.zip</b>.</div>
-          <a class="guide-dl-btn" href="https://github.com/2dust/v2rayN/releases/latest" target="_blank">
-            <div><div class="guide-dl-name">v2rayN</div><div class="guide-dl-sub">GitHub · Бесплатно · Windows 10/11</div></div>
-            <div class="guide-dl-arr">↗</div>
-          </a>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">2</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Добавьте ключ</div>
-          <div class="guide-step-desc">Скопируйте ключ vless://... В v2rayN: <b>Серверы → Добавить из буфера</b>.</div>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">3</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Включите прокси</div>
-          <div class="guide-step-desc">Правой кнопкой по серверу → <b>Сделать активным</b> → Системный прокси → Автонастройка.</div>
-        </div>
-      </div>
-      <div class="guide-tip">💡 Для полного VPN включите <b>TUN Mode</b> в настройках.</div>
+      <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Скачайте v2rayN</div><div class="guide-step-desc">Файл v2rayN-windows-64.zip с GitHub.</div><a class="guide-dl-btn" href="https://github.com/2dust/v2rayN/releases/latest" target="_blank"><div><div class="guide-dl-name">v2rayN</div><div class="guide-dl-sub">GitHub · Бесплатно · Windows 10/11</div></div><div class="guide-dl-arr">↗</div></a></div></div>
+      <div class="guide-step"><div class="guide-step-n">2</div><div class="guide-step-body"><div class="guide-step-title">Добавьте подписку</div><div class="guide-step-desc">Подписки → Добавить → вставьте ссылку подписки из бота.</div></div></div>
+      <div class="guide-step"><div class="guide-step-n">3</div><div class="guide-step-body"><div class="guide-step-title">Включите прокси</div><div class="guide-step-desc">Правой кнопкой → Сделать активным → Системный прокси → Автонастройка.</div></div></div>
+      <div class="guide-tip">💡 Для полного VPN включите TUN Mode в настройках.</div>
     </div>
-
     <div class="guide-panel" id="guide-mac">
-      <div class="guide-step">
-        <div class="guide-step-n">1</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Установите V2Box</div>
-          <div class="guide-step-desc">Найдите <b>V2Box</b> в Mac App Store. Бесплатно.</div>
-          <a class="guide-dl-btn" href="https://apps.apple.com/app/v2box-v2ray-client/id6446814690" target="_blank">
-            <div><div class="guide-dl-name">V2Box</div><div class="guide-dl-sub">Mac App Store · Бесплатно</div></div>
-            <div class="guide-dl-arr">↗</div>
-          </a>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">2</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Добавьте ключ</div>
-          <div class="guide-step-desc">Скопируйте ключ из бота. В V2Box нажмите <b>➕ → Paste from clipboard</b>.</div>
-        </div>
-      </div>
-      <div class="guide-step">
-        <div class="guide-step-n">3</div>
-        <div class="guide-step-body">
-          <div class="guide-step-title">Подключитесь</div>
-          <div class="guide-step-desc">Выберите сервер → <b>Connect</b>. Разрешите VPN в настройках macOS.</div>
-        </div>
-      </div>
-      <div class="guide-tip">💡 Альтернатива: <b>Hiddify</b> — открытый, поддерживает TUN-режим.</div>
+      <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Установите V2Box</div><div class="guide-step-desc">Mac App Store → V2Box. Бесплатно.</div><a class="guide-dl-btn" href="https://apps.apple.com/app/v2box-v2ray-client/id6446814690" target="_blank"><div><div class="guide-dl-name">V2Box</div><div class="guide-dl-sub">Mac App Store · Бесплатно</div></div><div class="guide-dl-arr">↗</div></a></div></div>
+      <div class="guide-step"><div class="guide-step-n">2</div><div class="guide-step-body"><div class="guide-step-title">Добавьте подписку</div><div class="guide-step-desc">➕ → Subscription → вставьте ссылку подписки из бота.</div></div></div>
+      <div class="guide-step"><div class="guide-step-n">3</div><div class="guide-step-body"><div class="guide-step-title">Подключитесь</div><div class="guide-step-desc">Выберите сервер → Connect.</div></div></div>
+      <div class="guide-tip">💡 Альтернатива: Hiddify — открытый, поддерживает TUN-режим.</div>
     </div>
   </div>
 
   <!-- FAQ -->
   <div class="sec"><div class="sec-title">FAQ</div><div class="sec-line"></div></div>
   <div class="faq">
-    <div class="faq-item" onclick="faqT(this)">
-      <div class="faq-q">Ключ выдаётся сразу после оплаты? <span class="faq-arr">▼</span></div>
-      <div class="faq-a">Да — автоматически и мгновенно. После оплаты через CryptoBot бот создаёт ваш аккаунт и присылает VLESS-ключ. Никакого ожидания.</div>
-    </div>
-    <div class="faq-item" onclick="faqT(this)">
-      <div class="faq-q">Как работает один ключ на двух серверах? <span class="faq-arr">▼</span></div>
-      <div class="faq-a">Ключ содержит настройки обоих серверов. В приложении вы добавляете один ключ — и видите оба сервера. Переключайтесь в один клик.</div>
-    </div>
-    <div class="faq-item" onclick="faqT(this)">
-      <div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div>
-      <div class="faq-a">WireGuard легко блокируется по сигнатуре. Reality маскируется под HTTPS — провайдер не может отличить ваш трафик от браузера.</div>
-    </div>
-    <div class="faq-item" onclick="faqT(this)">
-      <div class="faq-q">Какие крипты принимаете? <span class="faq-arr">▼</span></div>
-      <div class="faq-a">USDT, TON, BTC, ETH, LTC, BNB и другие через CryptoBot. Анонимно, мгновенно, без KYC.</div>
-    </div>
-    <div class="faq-item" onclick="faqT(this)">
-      <div class="faq-q">Есть возврат? <span class="faq-arr">▼</span></div>
-      <div class="faq-a">Да — 72 часа с момента оплаты, если VPN не работает на вашем устройстве. Обратитесь в поддержку.</div>
-    </div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Ключ выдаётся сразу после оплаты? <span class="faq-arr">▼</span></div><div class="faq-a">Да — автоматически и мгновенно. После оплаты через CryptoBot бот создаёт ваш аккаунт и присылает ключ.</div></div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Как работает один ключ на двух серверах? <span class="faq-arr">▼</span></div><div class="faq-a">Ключ содержит настройки обоих серверов. Добавьте один ключ — и видите оба сервера. Переключайтесь в один клик.</div></div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div><div class="faq-a">WireGuard легко блокируется по сигнатуре. Reality маскируется под HTTPS — провайдер не может отличить ваш трафик от браузера.</div></div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Какие крипты принимаете? <span class="faq-arr">▼</span></div><div class="faq-a">USDT, TON, BTC, ETH, LTC, BNB и другие через CryptoBot. Анонимно, мгновенно, без KYC.</div></div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Есть возврат? <span class="faq-arr">▼</span></div><div class="faq-a">Да — 72 часа с момента оплаты, если VPN не работает. Обратитесь в поддержку.</div></div>
   </div>
 
   <!-- FOOTER -->
@@ -964,7 +816,7 @@
       </div>
       <div class="cpb-arrow">→</div>
     </div>
-    <button class="modal-pay-btn" onclick="doPay()">
+    <button class="modal-pay-btn" id="payBtn" onclick="doPay()">
       <span>💎</span>
       <span>Оплатить через CryptoBot</span>
     </button>
@@ -1010,7 +862,6 @@
   let cur = {};
   let plans = {};
 
-  // Загружаем цены с сервера автоматически
   async function loadPlans() {
     try {
       const resp = await fetch('https://bot.s010lvloon.com/api/plans');
@@ -1037,15 +888,13 @@
   });
 
   async function doPay() {
-    const btn = document.querySelector('.modal-pay-btn');
-    btn.textContent = 'Создаём счёт...';
+    const btn = document.getElementById('payBtn');
+    btn.innerHTML = '<span>⏳</span><span>Создаём счёт...</span>';
     btn.disabled = true;
     try {
-      const userId = tg.initDataUnsafe?.user?.id;
+      const userId = tg?.initDataUnsafe?.user?.id;
       if (!userId) {
-        btn.textContent = '💎 Оплатить через CryptoBot';
-        btn.disabled = false;
-        tg.showAlert('Пожалуйста откройте магазин через кнопку 🛒 в боте @S010lvloon_VPN_bot');
+        tg?.showAlert('Пожалуйста, откройте магазин через кнопку 🛒 Купить VPN в боте @S010lvloon_VPN_bot');
         return;
       }
       const resp = await fetch('https://bot.s010lvloon.com/api/create-invoice', {
@@ -1058,17 +907,17 @@
         tg.openTelegramLink(data.pay_url);
         document.getElementById('overlay').classList.remove('show');
       } else {
-        tg.showAlert('Ошибка создания счёта');
+        tg?.showAlert('Ошибка создания счёта. Попробуйте ещё раз.');
       }
     } catch(e) {
-      tg.showAlert('Ошибка: ' + e.message);
+      tg?.showAlert('Ошибка: ' + e.message);
     } finally {
-      btn.textContent = '💎 Оплатить через CryptoBot';
+      btn.innerHTML = '<span>💎</span><span>Оплатить через CryptoBot</span>';
       btn.disabled = false;
     }
   }
 
-  // ── TRIAL ──
+  // TRIAL
   const TRIAL_KEY = 's010_trial_used';
 
   function initTrial() {
@@ -1090,15 +939,21 @@
     if (e.target.id === 'trialOverlay') document.getElementById('trialOverlay').classList.remove('show');
   });
 
-  function doTrial() {
-    if (tg) {
-      tg.sendData(JSON.stringify({ action: 'trial' }));
-      localStorage.setItem(TRIAL_KEY, '1');
-      document.getElementById('trialBanner').classList.add('used');
-      document.getElementById('trialOverlay').classList.remove('show');
-    } else {
+  async function doTrial() {
+    const userId = tg?.initDataUnsafe?.user?.id;
+    if (!tg) {
       alert('Откройте магазин через бота @S010lvloon_VPN_bot');
+      return;
     }
+    if (!userId) {
+      tg.showAlert('Пожалуйста, откройте магазин через кнопку 🛒 Купить VPN в боте @S010lvloon_VPN_bot');
+      return;
+    }
+    tg.sendData(JSON.stringify({ action: 'trial' }));
+    localStorage.setItem(TRIAL_KEY, '1');
+    const b = document.getElementById('trialBanner');
+    if (b) b.classList.add('used');
+    document.getElementById('trialOverlay').classList.remove('show');
   }
 
   function switchTab(name, el) {
