@@ -935,21 +935,34 @@
   }
 
   // TRIAL
-  const TRIAL_KEY = 's010_trial_used';
 
-  function initTrial() {
-    const used = localStorage.getItem(TRIAL_KEY);
-    if (used) {
-      const b = document.getElementById('trialBanner');
-      if (b) b.classList.add('used');
-    }
+   async function initTrial() {
+    const userId = getUserId();
+    if (!userId) return;
+    try {
+      const resp = await fetch(`https://bot.s010lvloon.com/api/trial-status?user_id=${userId}`);
+      const data = await resp.json();
+      if (data.used) {
+        const b = document.getElementById('trialBanner');
+        if (b) b.classList.add('used');
+      }
+    } catch(e) {}
   }
   initTrial();
 
-  function openTrialModal() {
-    const used = localStorage.getItem(TRIAL_KEY);
-    if (used) return;
-    document.getElementById('trialOverlay').classList.add('show');
+  async function openTrialModal() {
+  const userId = getUserId();
+  if (!userId) return;
+  try {
+    const resp = await fetch(`https://bot.s010lvloon.com/api/trial-status?user_id=${userId}`);
+    const data = await resp.json();
+    if (data.used) {
+      const b = document.getElementById('trialBanner');
+      if (b) b.classList.add('used');
+      return;
+    }
+  } catch(e) {}
+  document.getElementById('trialOverlay').classList.add('show');
   }
 
   document.getElementById('trialOverlay').addEventListener('click', e => {
@@ -967,12 +980,10 @@
       return;
     }
     tg.sendData(JSON.stringify({ action: 'trial' }));
-    localStorage.setItem(TRIAL_KEY, '1');
     const b = document.getElementById('trialBanner');
     if (b) b.classList.add('used');
     document.getElementById('trialOverlay').classList.remove('show');
-  }
-
+}
   function switchTab(name, el) {
     document.querySelectorAll('.guide-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.guide-panel').forEach(p => p.classList.remove('active'));
