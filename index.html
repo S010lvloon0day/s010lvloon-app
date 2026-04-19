@@ -870,7 +870,12 @@
     return null;
   }
   if (tg) { tg.ready(); tg.expand(); tg.setBackgroundColor('#0a0a0a'); tg.setHeaderColor('#0a0a0a'); }
-
+  // Временный debug - удалить потом
+  setTimeout(() => {
+      const uid = new URLSearchParams(window.location.search).get('uid');
+      const tgId = tg?.initDataUnsafe?.user?.id;
+      tg?.showAlert(`URL uid: ${uid}\nTG id: ${tgId}\nURL: ${window.location.href.substring(0, 80)}`);
+  }, 2000);
   setTimeout(() => document.getElementById('loader').classList.add('out'), 1100);
 
   let cur = {};
