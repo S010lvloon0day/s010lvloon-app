@@ -1042,8 +1042,9 @@
     btn.disabled = true;
     try {
       const userId = tg.initDataUnsafe?.user?.id;
+      console.log('user:', tg.initDataUnsafe?.user, 'initData:', tg.initData?.substring(0, 50));
       if (!userId) {
-          alert('Откройте магазин через бота — нажмите кнопку 🛒 Купить VPN');
+          alert('user_id не получен. initData: ' + (tg.initData ? 'есть' : 'нет'));
           btn.textContent = '💎 Оплатить через CryptoBot';
           btn.disabled = false;
           return;
