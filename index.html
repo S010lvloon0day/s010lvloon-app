@@ -881,8 +881,13 @@
   // чужой user_id и покупать VPN на чужой аккаунт.
   // Верификация происходит на сервере через tg.initData (HMAC-подпись Telegram).
   function getUserId() {
-    return tg?.initDataUnsafe?.user?.id || null;
-  }
+    const id = tg?.initDataUnsafe?.user?.id;
+    if (id) return id;
+    const params = new URLSearchParams(window.location.search);
+    const uid = params.get('uid');
+    if (uid) return parseInt(uid);
+    return null;
+  } 
 
   // ИСПРАВЛЕНО: кэш статуса триала — только ОДИН запрос к API вместо двух
   let trialUsed = null;
