@@ -934,7 +934,7 @@
     const userId = getUserId();
     // ИСПРАВЛЕНО: проверяем tg, а не просто userId — без Telegram Mini App нет initData,
     // и сервер отклонит запрос как неверифицированный
-    if (!tg || !userId) {
+    if (!userId) {
       const msg = 'Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot';
       if (tg) tg.showAlert(msg); else alert(msg);
       return;
