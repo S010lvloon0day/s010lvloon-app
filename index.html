@@ -873,7 +873,7 @@
 
   async function loadPlans() {
     try {
-      const resp = await fetch('https://bot.s010lvloon.online:8444/api/public-config');
+      const resp = await fetch('https://bot.s010lvloon.online:8082/api/public-config');
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       const config = await resp.json();
       plans = config.plans || {};
@@ -1022,7 +1022,7 @@
     btn.disabled = true;
 
     try {
-      const resp = await fetch('https://bot.s010lvloon.online:8444/api/create-invoice', {
+      const resp = await fetch('https://bot.s010lvloon.online:8082/api/create-invoice', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -1062,7 +1062,7 @@
     if (!hasVerifiedTelegramContext()) return;
     try {
       const params = new URLSearchParams({ init_data: tg.initData });
-      const resp = await fetch('https://bot.s010lvloon.online:8444/api/trial-status?' + params.toString());
+      const resp = await fetch('https://bot.s010lvloon.online:8082/api/trial-status?' + params.toString());
       const data = await resp.json();
       trialUsed = !!data.used;
       if (trialUsed) {
