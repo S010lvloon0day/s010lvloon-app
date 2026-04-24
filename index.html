@@ -850,11 +850,15 @@
   function getUserId() {
     const id = tg?.initDataUnsafe?.user?.id;
     if (id) return id;
-    return null;
-  } 
+    try {
+      const params = new URLSearchParams(tg?.initData || '');
+      const user = JSON.parse(params.get('user') || '{}');
+      return user.id || null;
+    } catch { return null; }
+  }
 
   function hasVerifiedTelegramContext() {
-    return Boolean(tg?.initData && getUserId());
+    return Boolean(tg?.initData);
   }
 
   // ИСПРАВЛЕНО: кэш статуса триала — только ОДИН запрос к API вместо двух
