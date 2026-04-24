@@ -1012,11 +1012,8 @@
 
   async function doPay() {
     const userId = getUserId();
-    // ИСПРАВЛЕНО: проверяем tg, а не просто userId — без Telegram Mini App нет initData,
-    // и сервер отклонит запрос как неверифицированный
-    if (!hasVerifiedTelegramContext()) {
-      const msg = 'Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot';
-      if (tg) tg.showAlert(msg); else alert(msg);
+    if (!tg?.initData) {
+      alert('DEBUG: tg=' + typeof tg + ' initData=' + JSON.stringify(tg?.initData) + ' initDataUnsafe=' + JSON.stringify(tg?.initDataUnsafe));
       return;
     }
 
