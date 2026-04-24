@@ -1099,12 +1099,28 @@
       if (tg) tg.showAlert(msg); else alert(msg);
       return;
     }
-    // Отправляем событие боту — он обработает и выдаст триальный ключ
-    tg.sendData(JSON.stringify({ action: 'trial' }));
-    trialUsed = true;
-    const b = document.getElementById('trialBanner');
-    if (b) b.classList.add('used');
     document.getElementById('trialOverlay').classList.remove('show');
+    try {
+      const resp = await fetch('https://bot.s010lvloon.online/api/activate-trial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ init_data: tg.initData }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        const msg = data.detail === 'trial_already_used'
+          ? '❌ Пробный доступ уже был использован.'
+          : '⚠️ Ошибка активации. Напишите в поддержку @S010lvloon_VPN_bot';
+        tg.showAlert(msg);
+        return;
+      }
+      trialUsed = true;
+      const b = document.getElementById('trialBanner');
+      if (b) b.classList.add('used');
+      tg.showAlert('✅ Триал активирован! Ключ отправлен в бот.');
+    } catch (e) {
+      tg.showAlert('⚠️ Ошибка соединения. Попробуйте позже.');
+    }
   }
 
   function switchTab(name, el) {
