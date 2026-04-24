@@ -1013,7 +1013,8 @@
   async function doPay() {
     const userId = getUserId();
     if (!tg?.initData) {
-      alert('DEBUG: tg=' + typeof tg + ' initData=' + JSON.stringify(tg?.initData) + ' initDataUnsafe=' + JSON.stringify(tg?.initDataUnsafe));
+      const msg = 'Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot';
+      if (tg) tg.showAlert(msg); else alert(msg);
       return;
     }
 
