@@ -813,6 +813,11 @@
       <span>⭐</span>
       <span id="starsBtnText">Оплатить Stars</span>
     </button>
+    <div style="text-align:center;color:var(--dim);font-size:12px;margin:10px 0 6px">— или —</div>
+    <button class="modal-pay-btn" id="rubBtn" onclick="doRub()" style="background:linear-gradient(135deg,#1a6b3a,#2d9e56)">
+      <span>🇷🇺</span>
+      <span id="rubBtnText">Оплатить рублями (СБП)</span>
+    </button>
     <div class="modal-note">
       // VLESS-ключ придёт автоматически · <span id="modalServerSummary">активные серверы</span>
     </div>
@@ -1095,6 +1100,37 @@
       tg.showAlert('Ошибка соединения: ' + e.message);
     } finally {
       btn.disabled = false;
+    }
+  }
+
+  async function doRub() {
+    if (!tg?.initData) {
+      const msg = 'Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot';
+      if (tg) tg.showAlert(msg); else alert(msg);
+      return;
+    }
+    const planKey = document.getElementById('overlay').dataset.planKey;
+    const btn = document.getElementById('rubBtn');
+    btn.disabled = true;
+    document.getElementById('rubBtnText').textContent = 'Создаём заказ...';
+    try {
+      const resp = await fetch('https://bot.s010lvloon.online/api/create-rub-invoice', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ plan: planKey, init_data: tg.initData }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        tg.showAlert('Ошибка: ' + (data.detail || JSON.stringify(data)));
+        return;
+      }
+      document.getElementById('overlay').classList.remove('show');
+      tg.showAlert('🇷🇺 QR-код для оплаты СБП отправлен в бот. Откройте чат с ботом и отсканируйте QR банковским приложением.');
+    } catch(e) {
+      tg.showAlert('Ошибка соединения: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      document.getElementById('rubBtnText').textContent = 'Оплатить рублями (СБП)';
     }
   }
 
