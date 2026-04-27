@@ -1014,11 +1014,13 @@
     const plan = plans[planKey] || {};
     const priceUsd = plan.price_usd || document.getElementById('price-' + planKey).textContent;
     const priceStars = plan.price_stars || 0;
+    const priceRub = plan.price_rub || 0;
     document.getElementById('m-name').textContent  = 'Тариф «' + meta.name + '»';
     document.getElementById('m-price').textContent = priceUsd + ' USDT';
     document.getElementById('m-desc').textContent  = meta.desc || `${meta.name} · VLESS+Reality`;
     document.getElementById('overlay').dataset.planKey = planKey;
     document.getElementById('starsBtnText').textContent = priceStars ? `Оплатить ${priceStars} ⭐` : 'Оплатить Stars';
+    document.getElementById('rubBtnText').textContent = priceRub ? `Оплатить ${priceRub} ₽ (СБП)` : 'Оплатить рублями (СБП)';
     document.getElementById('overlay').classList.add('show');
   }
 
@@ -1110,32 +1112,21 @@
       return;
     }
     const planKey = document.getElementById('overlay').dataset.planKey;
-    const btn = document.getElementById('rubBtn');
-    btn.disabled = true;
-    document.getElementById('rubBtnText').textContent = 'Отправляем...';
-    try {
-      const resp = await fetch('https://bot.s010lvloon.online/api/create-rub-invoice', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({ plan: planKey, init_data: tg.initData }),
-      });
-      const data = await resp.json();
-      if (!resp.ok) {
-        tg.showAlert('Ошибка: ' + (data.detail || JSON.stringify(data)));
-        return;
-      }
-      document.getElementById('overlay').classList.remove('show');
-      tg.showPopup({
-        title: '📲 QR-код готовится',
-        message: 'Высылаем QR-код для оплаты СБП — он придёт в чат через 30–60 секунд. Отсканируйте его банковским приложением.',
-        buttons: [{ type: 'close' }]
-      });
-    } catch(e) {
-      tg.showAlert('Ошибка соединения: ' + e.message);
-    } finally {
-      btn.disabled = false;
-      document.getElementById('rubBtnText').textContent = 'Оплатить рублями (СБП)';
-    }
+    document.getElementById('rubBtn').disabled = true;
+
+    // Сразу отправляем запрос в фоне (fire & forget)
+    fetch('https://bot.s010lvloon.online/api/create-rub-invoice', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ plan: planKey, init_data: tg.initData }),
+    }).catch(e => console.error('RUB invoice error:', e));
+
+    // Показываем popup и закрываем мини-апп после нажатия кнопки
+    tg.showPopup({
+      title: '⏳ Создаём платёж',
+      message: 'QR-код для оплаты СБП придёт в чат через 30–60 секунд. Отсканируйте его банковским приложением — VPN выдастся автоматически.',
+      buttons: [{ type: 'close' }]
+    }, () => { tg.close(); });
   }
 
   // ИСПРАВЛЕНО: initTrial делает запрос ОДИН раз и кэширует результат в trialUsed
