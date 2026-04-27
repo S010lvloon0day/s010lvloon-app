@@ -1112,7 +1112,7 @@
     const planKey = document.getElementById('overlay').dataset.planKey;
     const btn = document.getElementById('rubBtn');
     btn.disabled = true;
-    document.getElementById('rubBtnText').textContent = 'Создаём заказ...';
+    document.getElementById('rubBtnText').textContent = 'Отправляем...';
     try {
       const resp = await fetch('https://bot.s010lvloon.online/api/create-rub-invoice', {
         method: 'POST',
@@ -1125,7 +1125,11 @@
         return;
       }
       document.getElementById('overlay').classList.remove('show');
-      tg.showAlert('🇷🇺 QR-код для оплаты СБП отправлен в бот. Откройте чат с ботом и отсканируйте QR банковским приложением.');
+      tg.showPopup({
+        title: '📲 QR-код готовится',
+        message: 'Высылаем QR-код для оплаты СБП — он придёт в чат через 30–60 секунд. Отсканируйте его банковским приложением.',
+        buttons: [{ type: 'close' }]
+      });
     } catch(e) {
       tg.showAlert('Ошибка соединения: ' + e.message);
     } finally {
