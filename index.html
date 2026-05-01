@@ -1020,7 +1020,7 @@
     document.getElementById('m-desc').textContent  = meta.desc || `${meta.name} · VLESS+Reality`;
     document.getElementById('overlay').dataset.planKey = planKey;
     document.getElementById('starsBtnText').textContent = priceStars ? `Оплатить ${priceStars} ⭐` : 'Оплатить Stars';
-    document.getElementById('rubBtnText').textContent = priceRub ? `ВРЕМЕННО НЕДОСТУПНО Оплатить ${priceRub} ₽ (СБП)` : 'Оплатить рублями (СБП)';
+    document.getElementById('rubBtnText').textContent = priceRub ? `Оплатить ${priceRub} ₽ на FunPay` : 'Оплатить рублями на FunPay';
     document.getElementById('overlay').classList.add('show');
   }
 
@@ -1123,8 +1123,8 @@
 
     // Показываем popup и закрываем мини-апп после нажатия кнопки
     tg.showPopup({
-      title: '⏳ Создаём платёж',
-      message: 'QR-код для оплаты СБП придёт в чат через 30–60 секунд. Отсканируйте его банковским приложением — VPN выдастся автоматически.',
+      title: '✅ Заказ создан',
+      message: 'Информация для оплаты придёт в чат с ботом.',
       buttons: [{ type: 'close' }]
     }, () => { tg.close(); });
   }
