@@ -539,7 +539,7 @@
     </h1>
     <p class="hero-desc">
       VLESS + Reality маскируется под обычный HTTPS.
-      Никакого DPI, никаких блокировок — ваш трафик неотличим от браузера.
+      Никакого DPI, ваш трафик неотличим от браузера.
     </p>
     <div class="tech-row">
       <div class="tech-tag">VLESS</div>
@@ -716,7 +716,7 @@
   <div class="apps">
     <div class="app-card"><div class="app-os">Android</div><div class="app-name">v2rayNG</div><div class="app-where">Google Play</div></div>
     <div class="app-card"><div class="app-os">iOS</div><div class="app-name">Streisand</div><div class="app-where">App Store</div></div>
-    <div class="app-card"><div class="app-os">Windows</div><div class="app-name">v2rayN</div><div class="app-where">GitHub</div></div>
+    <div class="app-card"><div class="app-os">Windows</div><div class="app-name">Hiddify</div><div class="app-where">hiddify.com</div></div>
     <div class="app-card"><div class="app-os">macOS</div><div class="app-name">V2Box</div><div class="app-where">App Store</div></div>
     <div class="app-card"><div class="app-os">Linux</div><div class="app-name">Nekoray</div><div class="app-where">GitHub</div></div>
     <div class="app-card"><div class="app-os">Router</div><div class="app-name">OpenWRT</div><div class="app-where">xray-core</div></div>
@@ -745,10 +745,10 @@
       <div class="guide-tip server-guide-tip">💡 KillSwitch: Settings → Kill Switch → включить.</div>
     </div>
     <div class="guide-panel" id="guide-windows">
-      <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Скачайте v2rayN</div><div class="guide-step-desc">Файл v2rayN-windows-64.zip с GitHub.</div><a class="guide-dl-btn" href="https://github.com/2dust/v2rayN/releases/latest" target="_blank"><div><div class="guide-dl-name">v2rayN</div><div class="guide-dl-sub">GitHub · Бесплатно · Windows 10/11</div></div><div class="guide-dl-arr">↗</div></a></div></div>
-      <div class="guide-step"><div class="guide-step-n">2</div><div class="guide-step-body"><div class="guide-step-title">Добавьте подписку</div><div class="guide-step-desc">Подписки → Добавить → вставьте ссылку подписки из бота.</div></div></div>
-      <div class="guide-step"><div class="guide-step-n">3</div><div class="guide-step-body"><div class="guide-step-title">Включите прокси</div><div class="guide-step-desc">Правой кнопкой → Сделать активным → Системный прокси → Автонастройка.</div></div></div>
-      <div class="guide-tip server-guide-tip">💡 Для полного VPN включите TUN Mode.</div>
+      <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Скачайте Hiddify</div><div class="guide-step-desc">Установщик Hiddify для Windows с официального сайта.</div><a class="guide-dl-btn" href="https://hiddify.com/app/" target="_blank"><div><div class="guide-dl-name">Hiddify</div><div class="guide-dl-sub">hiddify.com · Бесплатно · Windows 10/11</div></div><div class="guide-dl-arr">↗</div></a></div></div>
+      <div class="guide-step"><div class="guide-step-n">2</div><div class="guide-step-body"><div class="guide-step-title">Добавьте подписку</div><div class="guide-step-desc">➕ → Add from URL → вставьте ссылку подписки из бота.</div></div></div>
+      <div class="guide-step"><div class="guide-step-n">3</div><div class="guide-step-body"><div class="guide-step-title">Подключитесь</div><div class="guide-step-desc">Нажмите Connect. TUN-режим включён автоматически — весь трафик, включая Telegram, идёт через VPN.</div></div></div>
+      <div class="guide-tip server-guide-tip">💡 Hiddify работает как настоящий VPN — не нужно ничего настраивать вручную.</div>
     </div>
     <div class="guide-panel" id="guide-mac">
       <div class="guide-step"><div class="guide-step-n">1</div><div class="guide-step-body"><div class="guide-step-title">Установите V2Box</div><div class="guide-step-desc">Mac App Store → V2Box. Бесплатно.</div><a class="guide-dl-btn" href="https://apps.apple.com/app/v2box-v2ray-client/id6446814690" target="_blank"><div><div class="guide-dl-name">V2Box</div><div class="guide-dl-sub">Mac App Store · Бесплатно</div></div><div class="guide-dl-arr">↗</div></a></div></div>
@@ -763,7 +763,7 @@
   <div class="faq">
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Ключ выдаётся сразу после оплаты? <span class="faq-arr">▼</span></div><div class="faq-a">Да — автоматически и мгновенно. После оплаты через CryptoBot бот создаёт ваш аккаунт и присылает ключ.</div></div>
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q" id="faqServersQuestion">Как работает один ключ на серверах? <span class="faq-arr">▼</span></div><div class="faq-a" id="faqServersAnswer">Ключ содержит настройки всех активных серверов. Добавьте один ключ и переключайтесь между доступными локациями.</div></div>
-    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div><div class="faq-a">WireGuard легко блокируется по сигнатуре. Reality маскируется под HTTPS — провайдер не может отличить ваш трафик от браузера.</div></div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div><div class="faq-a">WireGuard легко отключается по сигнатуре. Reality маскируется под HTTPS — провайдер не может отличить ваш трафик от браузера.</div></div>
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Какие крипты принимаете? <span class="faq-arr">▼</span></div><div class="faq-a">USDT, TON, BTC, ETH, LTC, BNB и другие через CryptoBot. Анонимно, мгновенно, без KYC.</div></div>
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Есть возврат? <span class="faq-arr">▼</span></div><div class="faq-a">Да — 72 часа с момента оплаты, если VPN не работает. Обратитесь в поддержку.</div></div>
     <div class="faq-item" onclick="faqT(this)" id="antiFaq"><div class="faq-q">Что такое Антизаглушка? <span class="faq-arr">▼</span></div><div class="faq-a">Резервный сервер на порту 2083. Используйте его, если основные серверы недоступны у вашего провайдера.</div></div>
