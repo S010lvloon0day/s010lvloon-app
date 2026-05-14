@@ -243,24 +243,35 @@
   .btn-outline { background: transparent; border: 1px solid var(--border2); color: var(--white); }
   .btn-fill   { background: var(--white); color: #000; }
 
-  .servers { padding: 0 12px 4px; display: flex; flex-direction: column; gap: 8px; }
+  .servers { padding: 0 12px 4px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .servers.solo { grid-template-columns: 1fr; }
   .server-card {
     background: var(--s1); border: 1px solid var(--border);
-    border-radius: var(--r); padding: 16px 18px;
-    display: flex; align-items: center; gap: 14px;
+    border-radius: var(--r); padding: 16px;
+    display: flex; flex-direction: column; gap: 10px;
+    position: relative; overflow: hidden;
   }
-  .server-flag { font-size: 24px; flex-shrink: 0; }
-  .server-info { flex: 1; }
-  .server-name { font-size: 14px; font-weight: 600; }
-  .server-loc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .server-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent);
+  }
+  .server-top { display: flex; align-items: center; justify-content: space-between; }
+  .server-flag { font-size: 28px; line-height: 1; }
   .server-ping {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px; padding: 4px 10px; border-radius: 6px;
+    font-size: 10px; padding: 3px 7px; border-radius: 5px;
     border: 1px solid var(--border2); color: var(--muted);
   }
-  .server-ping.good { color: var(--white); border-color: rgba(255,255,255,.25); }
+  .server-ping.good {
+    color: #4ade80; border-color: rgba(74,222,128,.3);
+    background: rgba(74,222,128,.06);
+  }
+  .server-info {}
+  .server-name { font-size: 13px; font-weight: 700; letter-spacing: -.2px; }
+  .server-loc { font-size: 11px; color: var(--muted); margin-top: 3px; line-height: 1.4; }
   .server-note {
-    margin: 8px 12px 0;
+    grid-column: 1 / -1;
     font-size: 11px; color: var(--dim); line-height: 1.5;
     padding: 10px 14px; border: 1px solid var(--border);
     border-radius: 8px;
@@ -813,11 +824,6 @@
       <span>⭐</span>
       <span id="starsBtnText">Оплатить Stars</span>
     </button>
-    <div style="text-align:center;color:var(--dim);font-size:12px;margin:10px 0 6px">— или —</div>
-    <button class="modal-pay-btn" id="rubBtn" onclick="doRub()" style="background:linear-gradient(135deg,#1a6b3a,#2d9e56)">
-      <span>🇷🇺</span>
-      <span id="rubBtnText">Оплатить рублями (СБП)</span>
-    </button>
     <div class="modal-note">
       // VLESS-ключ придёт автоматически · <span id="modalServerSummary">активные серверы</span>
     </div>
@@ -917,14 +923,19 @@
       return;
     }
 
+    const pingGood = p => !p || p === 'online' || parseInt(p) < 200;
+    const shortName = name => name.replace(/^S010lvloon\s*/i, '').trim() || name;
+    if (servers.length === 1) wrap.classList.add('solo'); else wrap.classList.remove('solo');
     wrap.innerHTML = servers.map(server => `
       <div class="server-card">
-        <div class="server-flag">${escapeHtml(server.flag || '🌍')}</div>
+        <div class="server-top">
+          <div class="server-flag">${escapeHtml(server.flag || '🌍')}</div>
+          <div class="server-ping${pingGood(server.ping) ? ' good' : ''}">${escapeHtml(server.ping || 'online')}</div>
+        </div>
         <div class="server-info">
-          <div class="server-name">${escapeHtml(server.name)}</div>
+          <div class="server-name">${escapeHtml(shortName(server.name))}</div>
           <div class="server-loc">${escapeHtml(server.location || 'VLESS + Reality')}</div>
         </div>
-        <div class="server-ping good">${escapeHtml(server.ping || 'online')}</div>
       </div>
     `).join('') + `<div class="server-note">${serverNoteText()}</div>`;
   }
@@ -1000,7 +1011,7 @@
     const serverCountLabel = document.getElementById('serverCountLabel');
     if (serverCountLabel) serverCountLabel.textContent = serverSummary.count === 1 ? 'Сервер' : 'Серверы';
     const serverCodesStat = document.getElementById('serverCodesStat');
-    if (serverCodesStat) serverCodesStat.textContent = serverSummary.names_text || '—';
+    if (serverCodesStat) serverCodesStat.textContent = servers.map(s => s.flag || '🌍').join(' ') || '—';
     const modal = document.getElementById('modalServerSummary');
     if (modal) modal.textContent = serverSummary.count ? `${serverLabel} сразу` : 'активные серверы';
     const trial = document.getElementById('trialServersText');
@@ -1020,7 +1031,6 @@
     document.getElementById('m-desc').textContent  = meta.desc || `${meta.name} · VLESS+Reality`;
     document.getElementById('overlay').dataset.planKey = planKey;
     document.getElementById('starsBtnText').textContent = priceStars ? `Оплатить ${priceStars} ⭐` : 'Оплатить Stars';
-    document.getElementById('rubBtnText').textContent = priceRub ? `Оплатить ${priceRub} ₽ на FunPay` : 'Оплатить рублями на FunPay';
     document.getElementById('overlay').classList.add('show');
   }
 
@@ -1103,30 +1113,6 @@
     } finally {
       btn.disabled = false;
     }
-  }
-
-  async function doRub() {
-    if (!tg?.initData) {
-      const msg = 'Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot';
-      if (tg) tg.showAlert(msg); else alert(msg);
-      return;
-    }
-    const planKey = document.getElementById('overlay').dataset.planKey;
-    document.getElementById('rubBtn').disabled = true;
-
-    // Сразу отправляем запрос в фоне (fire & forget)
-    fetch('https://bot.s010lvloon.online/api/create-rub-invoice', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ plan: planKey, init_data: tg.initData }),
-    }).catch(e => console.error('RUB invoice error:', e));
-
-    // Показываем popup и закрываем мини-апп после нажатия кнопки
-    tg.showPopup({
-      title: '✅ Заказ создан',
-      message: 'Информация для оплаты придёт в чат с ботом.',
-      buttons: [{ type: 'close' }]
-    }, () => { tg.close(); });
   }
 
   // ИСПРАВЛЕНО: initTrial делает запрос ОДИН раз и кэширует результат в trialUsed
