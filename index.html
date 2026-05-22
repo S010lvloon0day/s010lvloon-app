@@ -820,6 +820,11 @@
       <span>Оплатить через CryptoBot</span>
     </button>
     <div style="text-align:center;color:var(--dim);font-size:12px;margin:10px 0 6px">— или —</div>
+    <button class="modal-pay-btn" id="plategaBtn" onclick="doPlatega()" style="background:linear-gradient(135deg,#1a7a3c,#27ae60)">
+      <span>💳</span>
+      <span id="plategaBtnText">Карта РФ / СБП (₽)</span>
+    </button>
+    <div style="text-align:center;color:var(--dim);font-size:12px;margin:10px 0 6px">— или —</div>
     <button class="modal-pay-btn" id="starsBtn" onclick="doStars()" style="background:linear-gradient(135deg,#7b5ea7,#a67fd1)">
       <span>⭐</span>
       <span id="starsBtnText">Оплатить Stars</span>
@@ -1031,6 +1036,7 @@
     document.getElementById('m-desc').textContent  = meta.desc || `${meta.name} · VLESS+Reality`;
     document.getElementById('overlay').dataset.planKey = planKey;
     document.getElementById('starsBtnText').textContent = priceStars ? `Оплатить ${priceStars} ⭐` : 'Оплатить Stars';
+    document.getElementById('plategaBtnText').textContent = priceRub ? `Карта / СБП — ${priceRub} ₽` : 'Карта РФ / СБП (₽)';
     document.getElementById('overlay').classList.add('show');
   }
 
@@ -1111,6 +1117,41 @@
     } catch(e) {
       tg.showAlert('Ошибка соединения: ' + e.message);
     } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function doPlatega() {
+    if (!tg?.initData) {
+      const msg = 'Пожалуйста, откройте магазин через кнопку в боте @S010lvloon_VPN_bot';
+      if (tg) tg.showAlert(msg); else alert(msg);
+      return;
+    }
+    const planKey = document.getElementById('overlay').dataset.planKey;
+    const btn = document.getElementById('plategaBtn');
+    btn.innerHTML = '<span>⏳</span><span>Создаём счёт...</span>';
+    btn.disabled = true;
+    try {
+      const resp = await fetch('https://bot.s010lvloon.online/api/create-platega-invoice', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ plan: planKey, init_data: tg.initData }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        tg.showAlert('Ошибка: ' + (data.detail || JSON.stringify(data)));
+        return;
+      }
+      if (data.pay_url) {
+        document.getElementById('overlay').classList.remove('show');
+        tg.openLink(data.pay_url);
+      } else {
+        tg.showAlert('Ошибка: не получена ссылка на оплату.');
+      }
+    } catch(e) {
+      tg.showAlert('Ошибка соединения: ' + e.message);
+    } finally {
+      btn.innerHTML = '<span>💳</span><span>Карта РФ / СБП (₽)</span>';
       btn.disabled = false;
     }
   }
