@@ -261,56 +261,50 @@
   .btn-fill   { background: var(--white); color: #000; }
 
   /* ── SERVERS ── */
-  .servers { padding: 0 14px 4px; display: flex; flex-direction: column; }
-  .servers.solo {}
-  .server-row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 18px 20px; background: var(--s1);
-    border: 1px solid var(--border);
+  .servers {
+    padding: 0 14px 4px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .servers.solo { grid-template-columns: 1fr; }
+  .server-tile {
+    background: var(--s1); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 14px;
+    display: flex; flex-direction: column; gap: 10px;
     position: relative; overflow: hidden;
-    transition: background .15s;
   }
-  .server-row:first-child { border-radius: var(--r) var(--r) 0 0; }
-  .server-row:not(:first-child) { border-top: none; }
-  .server-row:last-child { border-radius: 0 0 0 0; }
-  .server-flag { font-size: 34px; line-height: 1; flex-shrink: 0; width: 40px; text-align: center; }
-  .server-info { flex: 1; min-width: 0; }
-  .server-name { font-size: 15px; font-weight: 700; letter-spacing: -.3px; margin-bottom: 3px; }
-  .server-loc {
-    font-size: 11px; color: var(--muted); line-height: 1;
-    display: flex; align-items: center; gap: 6px;
+  .server-tile::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.09), transparent);
   }
-  .server-loc-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
-  .server-proto {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px; letter-spacing: .5px; color: var(--dim);
-  }
-  .server-status {
-    display: flex; align-items: center; gap: 6px; flex-shrink: 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 700; letter-spacing: .8px;
-    color: #4ade80;
-  }
-  .server-status.offline { color: var(--muted); }
+  .server-tile-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .server-flag { font-size: 28px; line-height: 1; }
   .server-dot {
-    width: 7px; height: 7px; border-radius: 50%; background: #4ade80;
-    animation: dotPulse 2.5s ease infinite;
+    width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; flex-shrink: 0;
+    background: #4ade80; animation: dotPulse 2.5s ease infinite;
   }
   .server-dot.off { background: var(--dim); animation: none; }
   @keyframes dotPulse {
-    0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,.5); }
-    60% { opacity: .9; box-shadow: 0 0 0 5px rgba(74,222,128,0); }
+    0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(74,222,128,.45); }
+    60% { box-shadow: 0 0 0 5px rgba(74,222,128,0); }
+  }
+  .server-info { }
+  .server-name { font-size: 13px; font-weight: 700; letter-spacing: -.2px; margin-bottom: 3px; line-height: 1.2; }
+  .server-loc {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: var(--dim); letter-spacing: .5px; text-transform: uppercase;
   }
   .server-note {
+    grid-column: 1 / -1;
     font-size: 11px; color: var(--dim); line-height: 1.6;
-    padding: 12px 20px; border: 1px solid var(--border); border-top: none;
-    border-radius: 0 0 var(--r) var(--r);
-    font-family: 'JetBrains Mono', monospace;
-    background: var(--bg);
+    padding: 11px 14px; border: 1px solid var(--border);
+    border-radius: 10px; font-family: 'JetBrains Mono', monospace;
   }
-  /* legacy grid kept for any leftover references */
+  /* legacy compat */
   .server-card { display: none; }
   .server-ping  { display: none; }
+  .server-row   { display: none; }
 
   /* ── WHY ── */
   .why-list { padding: 0 14px 4px; display: flex; flex-direction: column; }
@@ -1093,31 +1087,25 @@
     const wrap = document.getElementById('serversList');
     if (!wrap) return;
     if (!servers.length) {
-      wrap.innerHTML = '<div class="server-note">// Серверы скоро появятся. Если вы уже купили подписку — напишите в поддержку.</div>';
+      wrap.innerHTML = '<div class="server-note" style="grid-column:1/-1">// Серверы скоро появятся. Если вы уже купили подписку — напишите в поддержку.</div>';
       return;
     }
 
-    const pingGood = p => !p || p === 'online' || parseInt(p) < 200;
-    const shortName = name => name.replace(/^S010lvloon\s*/i, '').trim() || name;
-    const city = loc => loc ? loc.split('·')[0].trim() : '';
+    const online = s => s.online !== false && (s.ping === 'online' || !s.ping || parseInt(s.ping) < 500);
 
-    wrap.innerHTML = servers.map((server, i) => {
-      const good = pingGood(server.ping);
-      const loc  = escapeHtml(server.location || '');
-      const cityPart = loc ? `<span>${city(server.location)}</span><span class="server-loc-dot"></span>` : '';
+    if (servers.length === 1) wrap.classList.add('solo'); else wrap.classList.remove('solo');
+
+    wrap.innerHTML = servers.map(server => {
+      const up = online(server);
       return `
-      <div class="server-row">
-        <div class="server-flag">${escapeHtml(server.flag || '🌍')}</div>
-        <div class="server-info">
-          <div class="server-name">${escapeHtml(shortName(server.name))}</div>
-          <div class="server-loc">
-            ${cityPart}
-            <span class="server-proto">VLESS · Reality</span>
-          </div>
+      <div class="server-tile">
+        <div class="server-tile-top">
+          <div class="server-flag">${escapeHtml(server.flag || '🌍')}</div>
+          <div class="server-dot${up ? '' : ' off'}"></div>
         </div>
-        <div class="server-status${good ? '' : ' offline'}">
-          <div class="server-dot${good ? '' : ' off'}"></div>
-          ${good ? 'ONLINE' : escapeHtml(server.ping)}
+        <div class="server-info">
+          <div class="server-name">${escapeHtml(server.name)}</div>
+          <div class="server-loc">${escapeHtml(server.cc || server.location || '')}</div>
         </div>
       </div>`;
     }).join('') + `<div class="server-note">${serverNoteText()}</div>`;
