@@ -482,6 +482,56 @@
   .guide-dl-name { font-size: 13px; font-weight: 600; color: var(--white); }
   .guide-dl-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
   .guide-dl-arr  { font-size: 16px; color: var(--dim); }
+
+  /* App Showcase */
+  .app-showcase { padding: 0 12px 4px; }
+  .app-featured {
+    background: var(--s1); border: 1px solid var(--border2);
+    border-radius: var(--r) var(--r) 0 0; border-bottom: none;
+    padding: 22px 20px; display: flex; align-items: center;
+    justify-content: space-between; position: relative; overflow: hidden;
+  }
+  .app-featured::after {
+    content: ''; position: absolute; top: -50px; right: -50px;
+    width: 150px; height: 150px;
+    background: radial-gradient(circle, rgba(255,255,255,.055), transparent 70%);
+    pointer-events: none;
+  }
+  .app-featured-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 2px; color: var(--white);
+    background: var(--s3); border: 1px solid var(--border2);
+    padding: 3px 9px; border-radius: 4px; display: inline-block;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .app-featured-name {
+    font-size: 32px; font-weight: 800; letter-spacing: -1.5px;
+    line-height: 1; margin-bottom: 6px;
+  }
+  .app-featured-desc { font-size: 12px; color: var(--muted); line-height: 1.5; max-width: 200px; }
+  .app-featured-glyph {
+    font-size: 48px; flex-shrink: 0; opacity: .15;
+    font-family: 'JetBrains Mono', monospace; font-weight: 700;
+    letter-spacing: -3px;
+  }
+  .app-platforms { display: flex; flex-direction: column; }
+  .app-platform-btn {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--s1); border: 1px solid var(--border);
+    border-top: none; padding: 14px 18px;
+    text-decoration: none; transition: background .18s;
+    cursor: pointer;
+  }
+  .app-platform-btn:last-child { border-radius: 0 0 var(--r) var(--r); }
+  .app-platform-btn:active { background: var(--s2); }
+  .app-platform-icon { font-size: 20px; flex-shrink: 0; width: 28px; text-align: center; }
+  .app-platform-info { flex: 1; }
+  .app-platform-store {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--dim); letter-spacing: .5px; margin-bottom: 1px;
+  }
+  .app-platform-name { font-size: 13px; font-weight: 600; color: var(--white); }
+  .app-platform-arr { font-size: 13px; color: var(--dim); margin-left: auto; }
 </style>
 </head>
 <body>
@@ -539,8 +589,8 @@
       <em>провайдера</em>
     </h1>
     <p class="hero-desc">
-      VLESS + Reality маскируется под обычный HTTPS.
-      Никакого DPI, ваш трафик неотличим от браузера.
+      VLESS + Reality выглядит как обычный HTTPS.
+      Ваш трафик неотличим от браузера.
     </p>
     <div class="tech-row">
       <div class="tech-tag">VLESS</div>
@@ -646,14 +696,14 @@
       <div class="why-num">01</div>
       <div>
         <div class="why-title">Маскировка под HTTPS</div>
-        <div class="why-desc">Reality использует TLS-сертификаты реальных сайтов. Провайдер и DPI видят обычный браузер.</div>
+        <div class="why-desc">Reality использует TLS-сертификаты реальных сайтов. Провайдер видит обычный HTTPS-трафик.</div>
       </div>
     </div>
     <div class="why-item">
       <div class="why-num">02</div>
       <div>
         <div class="why-title">Стабильно работает по всему миру</div>
-        <div class="why-desc">Современный протокол VLESS + Reality. Проверено в России, Иране, Китае.</div>
+        <div class="why-desc">Современный протокол VLESS + Reality. Работает в любой точке мира.</div>
       </div>
     </div>
     <div class="why-item">
@@ -716,12 +766,36 @@
   </div>
 
   <!-- APPS -->
-  <div class="sec"><div class="sec-title">Приложения</div><div class="sec-line"></div></div>
-  <div class="apps">
-    <div class="app-card"><div class="app-os">Android</div><div class="app-name">Happ</div><div class="app-where">Google Play</div></div>
-    <div class="app-card"><div class="app-os">iOS</div><div class="app-name">Happ</div><div class="app-where">App Store</div></div>
-    <div class="app-card"><div class="app-os">Windows</div><div class="app-name">Happ</div><div class="app-where">happ.to</div></div>
-    <div class="app-card"><div class="app-os">macOS</div><div class="app-name">Happ</div><div class="app-where">happ.to</div></div>
+  <div class="sec"><div class="sec-title">Приложение</div><div class="sec-line"></div></div>
+  <div class="app-showcase">
+    <div class="app-featured">
+      <div>
+        <div class="app-featured-badge">Официальный клиент</div>
+        <div class="app-featured-name">Happ</div>
+        <div class="app-featured-desc">iOS · Android · Windows · macOS<br>Бесплатно · Одна ссылка на все устройства</div>
+      </div>
+      <div class="app-featured-glyph">H</div>
+    </div>
+    <a class="app-platform-btn" href="https://play.google.com/store/apps/details?id=app.happ" target="_blank">
+      <span class="app-platform-icon">🤖</span>
+      <div class="app-platform-info"><div class="app-platform-store">GOOGLE PLAY</div><div class="app-platform-name">Android</div></div>
+      <span class="app-platform-arr">↗</span>
+    </a>
+    <a class="app-platform-btn" href="https://apps.apple.com/app/happ-proxy-utility/id6504287480" target="_blank">
+      <span class="app-platform-icon">📱</span>
+      <div class="app-platform-info"><div class="app-platform-store">APP STORE</div><div class="app-platform-name">iPhone · iPad</div></div>
+      <span class="app-platform-arr">↗</span>
+    </a>
+    <a class="app-platform-btn" href="https://happ.to" target="_blank">
+      <span class="app-platform-icon">🪟</span>
+      <div class="app-platform-info"><div class="app-platform-store">HAPP.TO</div><div class="app-platform-name">Windows 10 / 11</div></div>
+      <span class="app-platform-arr">↗</span>
+    </a>
+    <a class="app-platform-btn" href="https://happ.to" target="_blank">
+      <span class="app-platform-icon">🍎</span>
+      <div class="app-platform-info"><div class="app-platform-store">HAPP.TO</div><div class="app-platform-name">macOS</div></div>
+      <span class="app-platform-arr">↗</span>
+    </a>
   </div>
 
   <!-- GUIDE -->
@@ -768,10 +842,10 @@
   <div class="faq">
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Ключ выдаётся сразу после оплаты? <span class="faq-arr">▼</span></div><div class="faq-a">Да — автоматически и мгновенно. После оплаты через CryptoBot бот создаёт ваш аккаунт и присылает ключ.</div></div>
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q" id="faqServersQuestion">Как работает один ключ на серверах? <span class="faq-arr">▼</span></div><div class="faq-a" id="faqServersAnswer">Ключ содержит настройки всех активных серверов. Добавьте один ключ и переключайтесь между доступными локациями.</div></div>
-    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div><div class="faq-a">WireGuard легко отключается по сигнатуре. Reality маскируется под HTTPS — провайдер не может отличить ваш трафик от браузера.</div></div>
+    <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Почему именно VLESS+Reality, а не WireGuard? <span class="faq-arr">▼</span></div><div class="faq-a">WireGuard легко определяется по сигнатуре. Reality выглядит как HTTPS — провайдер не может отличить ваш трафик от браузера.</div></div>
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Какие крипты принимаете? <span class="faq-arr">▼</span></div><div class="faq-a">USDT, TON, BTC, ETH, LTC, BNB и другие через CryptoBot. Анонимно, мгновенно, без KYC.</div></div>
     <div class="faq-item" onclick="faqT(this)"><div class="faq-q">Есть возврат? <span class="faq-arr">▼</span></div><div class="faq-a">Да — 72 часа с момента оплаты, если VPN не работает. Обратитесь в поддержку.</div></div>
-    <div class="faq-item" onclick="faqT(this)" id="antiFaq"><div class="faq-q">Что такое Антизаглушка? <span class="faq-arr">▼</span></div><div class="faq-a">Резервный сервер на порту 2083. Используйте его, если основные серверы недоступны у вашего провайдера.</div></div>
+    <div class="faq-item" onclick="faqT(this)" id="antiFaq"><div class="faq-q">Что такое резервный сервер? <span class="faq-arr">▼</span></div><div class="faq-a">Дополнительный сервер на порту 2083. Если основные серверы недоступны у вашего провайдера — подключитесь к нему.</div></div>
   </div>
 
   <!-- FOOTER -->
