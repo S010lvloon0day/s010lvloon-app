@@ -327,11 +327,30 @@
   .step-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
 
   /* ── PAYMENT ── */
-  .pay-highlight {
-    margin: 0 14px 4px;
-    border: 1px solid var(--border2); border-radius: var(--r); padding: 20px;
-    background: var(--s1); display: flex; align-items: center; gap: 16px;
+  .pay-methods { padding: 0 14px 4px; display: flex; flex-direction: column; }
+  .pay-method {
+    display: flex; align-items: center; gap: 16px;
+    padding: 18px 20px; background: var(--s1);
+    border: 1px solid var(--border);
   }
+  .pay-method:first-child { border-radius: var(--r) var(--r) 0 0; }
+  .pay-method:not(:first-child) { border-top: none; }
+  .pay-method:last-child { border-radius: 0 0 var(--r) var(--r); }
+  .pay-method-icon { font-size: 28px; flex-shrink: 0; width: 36px; text-align: center; }
+  .pay-method-info { flex: 1; }
+  .pay-method-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+  .pay-method-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .pay-method-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; font-weight: 700; letter-spacing: 1px;
+    padding: 3px 8px; border-radius: 4px; text-transform: uppercase; flex-shrink: 0;
+  }
+  .tag-crypto { background: rgba(255,255,255,.08); color: var(--off); border: 1px solid var(--border2); }
+  .tag-rub    { background: rgba(255,255,255,.06); color: var(--muted); border: 1px solid var(--border); }
+  .tag-stars  { background: rgba(255,255,255,.06); color: var(--muted); border: 1px solid var(--border); }
+
+  /* legacy, keep for compat */
+  .pay-highlight { margin: 0 14px 4px; border: 1px solid var(--border2); border-radius: var(--r); padding: 20px; background: var(--s1); display: flex; align-items: center; gap: 16px; }
   .pay-crypto-icon { font-size: 34px; flex-shrink: 0; }
   .pay-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
   .pay-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
@@ -782,11 +801,30 @@
 
   <!-- PAYMENT -->
   <div class="sec"><div class="sec-title">Оплата</div><div class="sec-line"></div></div>
-  <div class="pay-highlight">
-    <div class="pay-crypto-icon">💎</div>
-    <div>
-      <div class="pay-title">CryptoBot</div>
-      <div class="pay-desc">USDT · TON · BTC · ETH · LTC<br>Мгновенно · Анонимно · Без комиссии</div>
+  <div class="pay-methods">
+    <div class="pay-method">
+      <div class="pay-method-icon">💎</div>
+      <div class="pay-method-info">
+        <div class="pay-method-name">CryptoBot</div>
+        <div class="pay-method-desc">USDT · TON · BTC · ETH · LTC · BNB<br>Анонимно · Без KYC · Мгновенно</div>
+      </div>
+      <div class="pay-method-tag tag-crypto">Крипта</div>
+    </div>
+    <div class="pay-method">
+      <div class="pay-method-icon">💳</div>
+      <div class="pay-method-info">
+        <div class="pay-method-name">Карта / СБП</div>
+        <div class="pay-method-desc">Любая карта РФ · СБП · Рубли<br>Через Platega — быстро и надёжно</div>
+      </div>
+      <div class="pay-method-tag tag-rub">₽ Рубли</div>
+    </div>
+    <div class="pay-method">
+      <div class="pay-method-icon">⭐</div>
+      <div class="pay-method-info">
+        <div class="pay-method-name">Telegram Stars</div>
+        <div class="pay-method-desc">Оплата прямо в Telegram<br>Встроенная система · Без переходов</div>
+      </div>
+      <div class="pay-method-tag tag-stars">Stars</div>
     </div>
   </div>
 
