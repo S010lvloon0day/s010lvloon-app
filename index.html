@@ -1326,20 +1326,28 @@
   // openTrialModal использует кэш вместо дублирующего запроса
   async function initTrial() {
     if (!hasVerifiedTelegramContext()) return;
+    const b = document.getElementById('trialBanner');
     try {
       const params = new URLSearchParams({ init_data: tg.initData });
       const resp = await fetch('https://bot.s010lvloon.online/api/trial-status?' + params.toString());
       const data = await resp.json();
       trialUsed = !!data.used;
       if (trialUsed) {
-        const b = document.getElementById('trialBanner');
         if (b) b.classList.add('used');
+      } else {
+        if (b) b.classList.remove('used');
       }
     } catch(e) {
       console.warn('trial-status error:', e);
+      trialUsed = false;
+      if (b) b.classList.remove('used');
     }
   }
   initTrial();
+
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) initTrial();
+  });
 
   function openTrialModal() {
     if (trialUsed === true) {
